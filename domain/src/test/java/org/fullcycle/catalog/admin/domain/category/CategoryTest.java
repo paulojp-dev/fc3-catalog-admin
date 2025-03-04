@@ -11,7 +11,7 @@ public class CategoryTest {
         final var description = "Description";
         final var isActive = true;
 
-        Category category = Category.of(name, description, isActive);
+        Category category = Category.from(name, description, isActive);
 
         Assertions.assertNotNull(category.getId());
         Assertions.assertEquals(name, category.getName());

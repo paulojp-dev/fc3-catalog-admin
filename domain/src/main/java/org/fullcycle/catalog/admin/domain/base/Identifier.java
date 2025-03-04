@@ -1,4 +1,4 @@
 package org.fullcycle.catalog.admin.domain.base;
 
-public class Identifier {
+public abstract class Identifier extends ValueObject {
 }

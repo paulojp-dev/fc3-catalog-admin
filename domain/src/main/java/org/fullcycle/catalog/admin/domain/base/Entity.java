@@ -2,7 +2,7 @@ package org.fullcycle.catalog.admin.domain.base;
 
 import java.util.Objects;
 
-public class Entity<ID extends Identifier> {
+public abstract class Entity<ID extends Identifier> {
 
     protected final ID id;
 
