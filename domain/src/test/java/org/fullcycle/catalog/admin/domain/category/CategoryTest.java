@@ -46,7 +46,7 @@ public class CategoryTest {
         Assertions.assertEquals(params.messages, exception.getErrors().getFirst().messages());
     }
 
-    private record CategoryParams(String name, String description, boolean isActive, List<String> messages) {
+    public record CategoryParams(String name, String description, boolean isActive, List<String> messages) {
 
         public static CategoryParams byName(String name, String message) {
             String error = Message.resolve("name", message);

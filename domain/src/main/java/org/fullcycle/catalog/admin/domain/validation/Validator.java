@@ -17,7 +17,7 @@ public abstract class Validator {
 
     public abstract void validate();
 
-    protected <T> RulesBag setRules(final String field) {
+    protected RulesBag setRules(final String field) {
         RulesBag rulesBag = new RulesBag(field);
         rulesBags.add(rulesBag);
         return rulesBag;
