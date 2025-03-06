@@ -14,16 +14,16 @@ public class CategoryID extends Identifier {
         this.$value = value;
     }
 
-    public static CategoryID from(final String id) {
+    public static CategoryID of(final String id) {
         return new CategoryID(id);
     }
 
-    public static CategoryID from(final UUID id) {
+    public static CategoryID of(final UUID id) {
         return new CategoryID(id.toString().toLowerCase());
     }
 
     public static CategoryID unique() {
-        return CategoryID.from(UUID.randomUUID());
+        return CategoryID.of(UUID.randomUUID());
     }
 
     public String get$value() {

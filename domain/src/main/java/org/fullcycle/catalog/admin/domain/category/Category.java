@@ -1,7 +1,6 @@
 package org.fullcycle.catalog.admin.domain.category;
 
 import org.fullcycle.catalog.admin.domain.base.AggregateRoot;
-import org.fullcycle.catalog.admin.domain.validation.ValidationHandler;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -31,25 +30,18 @@ public class Category extends AggregateRoot<CategoryID> {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
+        validate();
     }
 
-    public static Category from(final String name, final String description, final boolean isActive) {
+    public static Category of(final String name, final String description, final boolean isActive) {
         final var id = CategoryID.unique();
         final var now = Instant.now();
-        return new Category(
-                id,
-                name,
-                description,
-                isActive,
-                now,
-                now,
-                null
-        );
+        return new Category(id, name, description, isActive, now, now, null);
     }
 
     @Override
-    public void validate(ValidationHandler handler) {
-        new CategoryValidator(this, handler).validate();
+    protected void validate() {
+        new CategoryValidator(this).validate();
     }
 
     public CategoryID getId() {

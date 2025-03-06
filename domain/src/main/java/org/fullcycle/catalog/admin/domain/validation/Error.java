@@ -1,4 +1,6 @@
 package org.fullcycle.catalog.admin.domain.validation;
 
-public record Error(String message) {
+import java.util.List;
+
+public record Error(String field, List<String> messages) {
 }
