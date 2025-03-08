@@ -3,6 +3,7 @@ package org.fullcycle.catalog.admin.domain.category;
 import org.fullcycle.catalog.admin.domain.exception.DomainValidationException;
 import org.fullcycle.catalog.admin.domain.validation.Message;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -38,6 +39,7 @@ public class CategoryTest {
         Assertions.assertEquals(params.isActive, category.isActive());
         Assertions.assertNotNull(category.getCreatedAt());
         Assertions.assertNotNull(category.getUpdatedAt());
+        Assertions.assertEquals(category.getCreatedAt(), category.getUpdatedAt());
         Assertions.assertTrue(category.getDeletedAt().isEmpty());
     }
 
@@ -47,6 +49,19 @@ public class CategoryTest {
         Executable executable = () -> Category.of(params.name, params.description, params.isActive);
         final var exception = Assertions.assertThrows(DomainValidationException.class, executable);
         Assertions.assertEquals(params.message, exception.getErrors().getFirst().message());
+    }
+
+    @Test
+    public void givenActiveCategory_whenDeactivateCategory_thenDeactivateCategory() {
+        String name = "Name";
+        String description = "Description";
+        Category category = Category.of(name, description, true);
+        category.deactivate();
+        Assertions.assertEquals(name, category.getName());
+        Assertions.assertEquals(description, category.getDescription());
+        Assertions.assertFalse(category.isActive());
+        Assertions.assertNotEquals(category.getCreatedAt(), category.getUpdatedAt());
+        Assertions.assertTrue(category.getDeletedAt().isEmpty());
     }
 
     public record CategoryParams(String name, String description, boolean isActive, String message) {

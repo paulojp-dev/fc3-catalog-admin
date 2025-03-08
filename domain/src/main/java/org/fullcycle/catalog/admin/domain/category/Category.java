@@ -38,6 +38,11 @@ public class Category extends AggregateRoot<CategoryID> {
         new CategoryValidation(this).validate();
     }
 
+    public void deactivate() {
+        isActive = false;
+        updatedAt = Instant.now();
+    }
+
     public CategoryID getId() {
         return id;
     }
