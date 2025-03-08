@@ -18,7 +18,7 @@ public class CategoryValidation extends Validation {
                 .max(255)
                 .apply(category.getName());
         setRules("description")
-                .required()
+                .max(255)
                 .apply(category.getDescription());
         throwIfErrors();
     }
