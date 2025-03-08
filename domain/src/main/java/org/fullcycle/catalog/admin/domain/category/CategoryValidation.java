@@ -1,12 +1,12 @@
 package org.fullcycle.catalog.admin.domain.category;
 
-import org.fullcycle.catalog.admin.domain.validation.Validator;
+import org.fullcycle.catalog.admin.domain.validation.Validation;
 
-public class CategoryValidator extends Validator {
+public class CategoryValidation extends Validation {
 
     private final Category category;
 
-    public CategoryValidator(final Category category) {
+    public CategoryValidation(final Category category) {
         this.category = category;
     }
 
@@ -16,6 +16,9 @@ public class CategoryValidator extends Validator {
                 .required()
                 .min(3)
                 .apply(category.getName());
+        setRules("description")
+                .required()
+                .apply(category.getDescription());
         throwIfErrors();
     }
 }

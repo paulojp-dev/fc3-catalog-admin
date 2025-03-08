@@ -16,7 +16,9 @@ public class CategoryTest {
         return List.of(
                 CategoryParams.byName(null, Message.NOT_NULL),
                 CategoryParams.byName("   ", Message.NOT_EMPTY),
-                CategoryParams.byName("ab   ", Message.MIN_STRING, 3)
+                CategoryParams.byName("ab   ", Message.MIN_STRING, 3),
+                CategoryParams.byDescription(null, Message.NOT_NULL),
+                CategoryParams.byDescription("   ", Message.NOT_EMPTY)
         );
     }
 
@@ -58,7 +60,7 @@ public class CategoryTest {
         }
 
         public static CategoryParams byDescription(String description, String message) {
-            String error = Message.resolve("name", message);
+            String error = Message.resolve("description", message);
             return new CategoryParams("Name", description, true, error);
         }
     }

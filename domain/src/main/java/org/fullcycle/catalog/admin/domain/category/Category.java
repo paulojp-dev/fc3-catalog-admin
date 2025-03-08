@@ -41,7 +41,7 @@ public class Category extends AggregateRoot<CategoryID> {
 
     @Override
     protected void validate() {
-        new CategoryValidator(this).validate();
+        new CategoryValidation(this).validate();
     }
 
     public CategoryID getId() {

@@ -5,12 +5,12 @@ import org.fullcycle.catalog.admin.domain.exception.DomainValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Validator {
+public abstract class Validation {
 
     private final List<Error> errors;
     private final List<RulesBag> rulesBags;
 
-    protected Validator() {
+    protected Validation() {
         errors = new ArrayList<>();
         rulesBags = new ArrayList<>();
     }
