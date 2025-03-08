@@ -25,9 +25,9 @@ public abstract class Validator {
 
     public void throwIfErrors() {
         for (RulesBag rulesBag : rulesBags) {
-            List<String> messages = rulesBag.getMessages();
-            if (!messages.isEmpty()) {
-                errors.add(new Error(rulesBag.getField(), messages));
+            String message = rulesBag.getMessage();
+            if (message != null) {
+                errors.add(new Error(rulesBag.getField(), message));
             }
         }
         if (!errors.isEmpty()) {

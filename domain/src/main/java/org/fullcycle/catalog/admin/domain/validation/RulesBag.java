@@ -1,5 +1,6 @@
 package org.fullcycle.catalog.admin.domain.validation;
 
+import org.fullcycle.catalog.admin.domain.validation.rule.Min;
 import org.fullcycle.catalog.admin.domain.validation.rule.Required;
 import org.fullcycle.catalog.admin.domain.validation.rule.Rule;
 
@@ -11,12 +12,11 @@ public class RulesBag {
 
     private final String field;
     private final List<Rule> rules;
-    private final List<String> messages;
+    private String message;
 
     public RulesBag(final String field) {
         this.field = field;
         rules = new ArrayList<>();
-        messages = new ArrayList<>();
     }
 
     public RulesBag required() {
@@ -24,17 +24,27 @@ public class RulesBag {
         return this;
     }
 
+    public RulesBag min(final Integer size) {
+        rules.add(new Min(size));
+        return this;
+    }
+
     public <T> void apply(final T value) {
         for (Rule rule : rules) {
-            Optional<String> message = rule.apply(field, value);
-            if (message.isPresent()) {
-                messages.add(message.get());
+            if (hasError()) {
+                break;
             }
+            Optional<String> message = rule.apply(field, value);
+            message.ifPresent(s -> this.message = s);
         }
     }
 
-    public List<String> getMessages() {
-        return messages;
+    public Boolean hasError() {
+        return message != null;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public String getField() {

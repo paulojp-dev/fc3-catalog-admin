@@ -15,7 +15,8 @@ public class CategoryTest {
     static List<CategoryParams> invalidCategoryData() {
         return List.of(
                 CategoryParams.byName(null, Message.NOT_NULL),
-                CategoryParams.byName("   ", Message.NOT_EMPTY)
+                CategoryParams.byName("   ", Message.NOT_EMPTY),
+                CategoryParams.byName("ab   ", Message.MIN_STRING, 3)
         );
     }
 
@@ -40,26 +41,25 @@ public class CategoryTest {
     @MethodSource("invalidCategoryData")
     public void givenInvalidParam_whenCreateNewCategory_thenThrowsException(CategoryParams params) {
         Executable executable = () -> Category.of(params.name, params.description, params.isActive);
-
         final var exception = Assertions.assertThrows(DomainValidationException.class, executable);
-        Assertions.assertEquals(params.messages.size(), exception.getErrors().getFirst().messages().size());
-        Assertions.assertEquals(params.messages, exception.getErrors().getFirst().messages());
+        Assertions.assertEquals(params.message, exception.getErrors().getFirst().message());
     }
 
-    public record CategoryParams(String name, String description, boolean isActive, List<String> messages) {
+    public record CategoryParams(String name, String description, boolean isActive, String message) {
 
         public static CategoryParams byName(String name, String message) {
             String error = Message.resolve("name", message);
-            return new CategoryParams(name, "Description", true, List.of(error));
+            return new CategoryParams(name, "Description", true, error);
+        }
+
+        public static CategoryParams byName(String name, String message, Integer size) {
+            String error = Message.resolve("name", message, size);
+            return new CategoryParams(name, "Description", true, error);
         }
 
         public static CategoryParams byDescription(String description, String message) {
             String error = Message.resolve("name", message);
-            return new CategoryParams("Name", description,  true, List.of(error));
-        }
-
-        public static CategoryParams allNull(List<String> messages) {
-            return new CategoryParams(null, null, false, messages);
+            return new CategoryParams("Name", description, true, error);
         }
     }
 }

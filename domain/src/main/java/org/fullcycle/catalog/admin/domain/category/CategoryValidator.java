@@ -14,6 +14,7 @@ public class CategoryValidator extends Validator {
     public void validate() {
         setRules("name")
                 .required()
+                .min(3)
                 .apply(category.getName());
         throwIfErrors();
     }
