@@ -50,6 +50,14 @@ public class Category extends AggregateRoot<CategoryID> {
         return this;
     }
 
+    public Category update(final String name, final String description) {
+        this.name = name;
+        this.description = description;
+        this.updatedAt = Instant.now();
+        validate();
+        return this;
+    }
+
     public CategoryID getId() {
         return id;
     }

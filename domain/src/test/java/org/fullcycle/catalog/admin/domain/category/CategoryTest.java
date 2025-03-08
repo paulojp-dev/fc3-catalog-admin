@@ -51,6 +51,15 @@ public class CategoryTest {
         Assertions.assertEquals(params.message, exception.getErrors().getFirst().message());
     }
 
+    @ParameterizedTest
+    @MethodSource("invalidCategoryData")
+    public void givenInvalidParam_whenUpdateCategory_thenThrowsException(CategoryParams params) {
+        Category category = Category.of("Old Name", "Old Description", params.isActive);
+        Executable executable = () -> category.update(params.name, params.description);
+        final var exception = Assertions.assertThrows(DomainValidationException.class, executable);
+        Assertions.assertEquals(params.message, exception.getErrors().getFirst().message());
+    }
+
     @Test
     public void givenActiveCategory_whenDeactivateCategory_thenDeactivateCategory() {
         String name = "Name";
@@ -73,6 +82,18 @@ public class CategoryTest {
         Assertions.assertEquals(name, category.getName());
         Assertions.assertEquals(description, category.getDescription());
         Assertions.assertTrue(category.isActive());
+        Assertions.assertNotEquals(category.getCreatedAt(), category.getUpdatedAt());
+        Assertions.assertTrue(category.getDeletedAt().isEmpty());
+    }
+
+    @Test
+    public void givenACategory_whenUpdateCategory_thenUpdateCategory() {
+        String name = "New Name";
+        String description = "New Description";
+        Category category = Category.of("Old Name", "Old Description", true);
+        category.update(name, description);
+        Assertions.assertEquals(name, category.getName());
+        Assertions.assertEquals(description, category.getDescription());
         Assertions.assertNotEquals(category.getCreatedAt(), category.getUpdatedAt());
         Assertions.assertTrue(category.getDeletedAt().isEmpty());
     }
