@@ -64,6 +64,19 @@ public class CategoryTest {
         Assertions.assertTrue(category.getDeletedAt().isEmpty());
     }
 
+    @Test
+    public void givenInactiveCategory_whenActivateCategory_thenActivateCategory() {
+        String name = "Name";
+        String description = "Description";
+        Category category = Category.of(name, description, false);
+        category.activate();
+        Assertions.assertEquals(name, category.getName());
+        Assertions.assertEquals(description, category.getDescription());
+        Assertions.assertTrue(category.isActive());
+        Assertions.assertNotEquals(category.getCreatedAt(), category.getUpdatedAt());
+        Assertions.assertTrue(category.getDeletedAt().isEmpty());
+    }
+
     public record CategoryParams(String name, String description, boolean isActive, String message) {
 
         public static CategoryParams of(String name, String description, Boolean isActive) {
