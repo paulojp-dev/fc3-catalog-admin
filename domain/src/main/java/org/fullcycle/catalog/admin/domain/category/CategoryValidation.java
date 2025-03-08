@@ -15,6 +15,7 @@ public class CategoryValidation extends Validation {
         setRules("name")
                 .required()
                 .min(3)
+                .max(255)
                 .apply(category.getName());
         setRules("description")
                 .required()

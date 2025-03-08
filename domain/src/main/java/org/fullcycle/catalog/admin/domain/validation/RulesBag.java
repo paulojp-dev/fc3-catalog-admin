@@ -1,5 +1,6 @@
 package org.fullcycle.catalog.admin.domain.validation;
 
+import org.fullcycle.catalog.admin.domain.validation.rule.Max;
 import org.fullcycle.catalog.admin.domain.validation.rule.Min;
 import org.fullcycle.catalog.admin.domain.validation.rule.Required;
 import org.fullcycle.catalog.admin.domain.validation.rule.Rule;
@@ -26,6 +27,11 @@ public class RulesBag {
 
     public RulesBag min(final Integer size) {
         rules.add(new Min(size));
+        return this;
+    }
+
+    public RulesBag max(final Integer size) {
+        rules.add(new Max(size));
         return this;
     }
 

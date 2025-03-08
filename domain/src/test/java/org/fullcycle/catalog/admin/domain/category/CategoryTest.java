@@ -17,6 +17,7 @@ public class CategoryTest {
                 CategoryParams.byName(null, Message.NOT_NULL),
                 CategoryParams.byName("   ", Message.NOT_EMPTY),
                 CategoryParams.byName("ab   ", Message.MIN_STRING, 3),
+                CategoryParams.byName("a".repeat(256), Message.MAX_STRING, 255),
                 CategoryParams.byDescription(null, Message.NOT_NULL),
                 CategoryParams.byDescription("   ", Message.NOT_EMPTY)
         );
@@ -24,7 +25,7 @@ public class CategoryTest {
 
     @Test
     public void givenValidParams_whenCreateNewCategory_thenInstantiateACategory() {
-        final var name = "Category";
+        final var name = "Name";
         final var description = "Description";
         final var isActive = true;
 
