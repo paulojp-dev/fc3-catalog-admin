@@ -3,16 +3,12 @@ package org.fullcycle.catalog.admin.domain.category;
 import org.fullcycle.catalog.admin.domain.base.AggregateRoot;
 
 import java.time.Instant;
-import java.util.Optional;
 
 public class Category extends AggregateRoot<CategoryID> {
 
     private String name;
     private String description;
     private boolean isActive;
-    private Instant createdAt;
-    private Instant updatedAt;
-    private Instant deletedAt;
 
     private Category(
             final CategoryID id,
@@ -23,13 +19,11 @@ public class Category extends AggregateRoot<CategoryID> {
             final Instant updatedAt,
             final Instant deletedAt
     ) {
-        super(id);
+        super(id, createdAt, updatedAt, deletedAt);
         this.name = name;
         this.description = description;
         this.isActive = isActive;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
+
         validate();
     }
 
@@ -58,17 +52,5 @@ public class Category extends AggregateRoot<CategoryID> {
 
     public boolean isActive() {
         return isActive;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public Optional<Instant> getDeletedAt() {
-        return Optional.ofNullable(deletedAt);
     }
 }
