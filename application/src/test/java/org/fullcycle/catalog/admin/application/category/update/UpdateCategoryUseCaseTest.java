@@ -35,7 +35,7 @@ public class UpdateCategoryUseCaseTest {
         final var expectedDescription = "New Description";
         final var expectedIsActive = false;
         final var command = UpdateCategoryCommand.of(
-                existingCategory.getId(),
+                existingCategory.getId().getValue(),
                 expectedName,
                 expectedDescription,
                 expectedIsActive
@@ -55,7 +55,7 @@ public class UpdateCategoryUseCaseTest {
                         category -> Objects.equals(expectedName, category.getName())
                                 && Objects.equals(expectedDescription, category.getDescription())
                                 && Objects.equals(expectedIsActive, category.isActive())
-                                && Objects.equals(command.id(), category.getId())
+                                && Objects.equals(command.id(), category.getId().getValue())
                                 && Objects.nonNull(category.getCreatedAt())
                                 && Objects.nonNull(category.getUpdatedAt())
                                 && Objects.equals(true, category.getCreatedAt().isBefore(category.getUpdatedAt()))
@@ -69,7 +69,12 @@ public class UpdateCategoryUseCaseTest {
         final var expectedDescription = "New Description";
         final var expectedIsActive = false;
         final var invalidId = CategoryID.of("invalid_id");
-        final var command = UpdateCategoryCommand.of(invalidId, expectedName, expectedDescription, expectedIsActive);
+        final var command = UpdateCategoryCommand.of(
+                invalidId.getValue(),
+                expectedName,
+                expectedDescription,
+                expectedIsActive
+        );
         final var expectedException = ResourceNotFoundException.byId("Category", invalidId.getValue());
 
         Mockito.when(categoryGateway.findById(invalidId))
@@ -86,7 +91,12 @@ public class UpdateCategoryUseCaseTest {
     @Test
     public void givenACommandWithInvalidParams_whenExecute_thenThrowException() {
         final var existingCategory = Category.of("Name", "Description", true);
-        final var command = UpdateCategoryCommand.of(existingCategory.getId(), null, null, false);
+        final var command = UpdateCategoryCommand.of(
+                existingCategory.getId().getValue(),
+                null,
+                null,
+                false
+        );
         final var expectedMessage = Message.resolve("name", Message.NOT_NULL);
 
         Mockito.when(categoryGateway.findById(existingCategory.getId()))
