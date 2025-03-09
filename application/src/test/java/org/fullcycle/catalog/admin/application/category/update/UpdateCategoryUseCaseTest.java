@@ -28,11 +28,16 @@ public class UpdateCategoryUseCaseTest {
 
     @Test
     public void givenAValidCommand_whenExecute_thenUpdateCategory() {
-        final var existingCategory = Category.of("Old Name", "Old Description", false);
+        final var existingCategory = Category.of("Old Name", "Old Description", true);
         final var expectedName = "New Name";
         final var expectedDescription = "New Description";
         final var expectedIsActive = false;
-        final var command = UpdateCategoryCommand.of(existingCategory.getId(), expectedName, expectedDescription);
+        final var command = UpdateCategoryCommand.of(
+                existingCategory.getId(),
+                expectedName,
+                expectedDescription,
+                expectedIsActive
+        );
 
         Mockito.when(categoryGateway.findById(existingCategory.getId()))
                 .thenReturn(Optional.of(existingCategory));
@@ -60,8 +65,9 @@ public class UpdateCategoryUseCaseTest {
     public void givenACommandWithInvalidId_whenExecute_thenThrowException() {
         final var expectedName = "New Name";
         final var expectedDescription = "New Description";
+        final var expectedIsActive = false;
         final var invalidId = CategoryID.of("invalid_id");
-        final var command = UpdateCategoryCommand.of(invalidId, expectedName, expectedDescription);
+        final var command = UpdateCategoryCommand.of(invalidId, expectedName, expectedDescription, expectedIsActive);
         final var expectedException = ResourceNotFoundException.byId("Category", invalidId.getValue());
 
         Mockito.when(categoryGateway.findById(invalidId))

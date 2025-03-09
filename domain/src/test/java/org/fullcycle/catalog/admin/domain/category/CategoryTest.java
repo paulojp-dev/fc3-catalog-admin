@@ -55,7 +55,7 @@ public class CategoryTest {
     @MethodSource("invalidCategoryData")
     public void givenInvalidParam_whenUpdateCategory_thenThrowsException(CategoryParams params) {
         final var category = Category.of("Old Name", "Old Description", params.isActive);
-        Executable executable = () -> category.update(params.name, params.description);
+        Executable executable = () -> category.update(params.name, params.description, true);
         final var exception = Assertions.assertThrows(DomainValidationException.class, executable);
         Assertions.assertEquals(params.message, exception.getErrors().get(0).message());
     }
@@ -94,10 +94,12 @@ public class CategoryTest {
     public void givenACategory_whenUpdateCategory_thenUpdateCategory() {
         final var expectedName = "New Name";
         final var expectedDescription = "New Description";
+        final var expectedIsActive = false;
         final var category = Category.of("Old Name", "Old Description", true);
-        category.update(expectedName, expectedDescription);
+        category.update(expectedName, expectedDescription, expectedIsActive);
         Assertions.assertEquals(expectedName, category.getName());
         Assertions.assertEquals(expectedDescription, category.getDescription());
+        Assertions.assertEquals(expectedIsActive, category.isActive());
         Assertions.assertNotEquals(category.getCreatedAt(), category.getUpdatedAt());
         Assertions.assertTrue(category.getDeletedAt().isEmpty());
     }
