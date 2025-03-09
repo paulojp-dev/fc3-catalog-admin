@@ -26,7 +26,7 @@ public class CategoryID extends Identifier {
         return CategoryID.of(UUID.randomUUID());
     }
 
-    public String get$value() {
+    public String getValue() {
         return $value;
     }
 
@@ -34,11 +34,11 @@ public class CategoryID extends Identifier {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         final CategoryID that = (CategoryID) o;
-        return Objects.equals(get$value(), that.get$value());
+        return Objects.equals(getValue(), that.getValue());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(get$value());
+        return Objects.hashCode(getValue());
     }
 }
