@@ -48,7 +48,7 @@ public class CategoryTest {
     public void givenInvalidParam_whenCreateNewCategory_thenThrowsException(CategoryParams params) {
         Executable executable = () -> Category.of(params.name, params.description, params.isActive);
         final var exception = Assertions.assertThrows(DomainValidationException.class, executable);
-        Assertions.assertEquals(params.message, exception.getErrors().getFirst().message());
+        Assertions.assertEquals(params.message, exception.getErrors().get(0).message());
     }
 
     @ParameterizedTest
@@ -57,7 +57,7 @@ public class CategoryTest {
         Category category = Category.of("Old Name", "Old Description", params.isActive);
         Executable executable = () -> category.update(params.name, params.description);
         final var exception = Assertions.assertThrows(DomainValidationException.class, executable);
-        Assertions.assertEquals(params.message, exception.getErrors().getFirst().message());
+        Assertions.assertEquals(params.message, exception.getErrors().get(0).message());
     }
 
     @Test
