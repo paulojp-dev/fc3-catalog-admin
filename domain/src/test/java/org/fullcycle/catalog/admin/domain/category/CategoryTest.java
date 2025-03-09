@@ -32,7 +32,7 @@ public class CategoryTest {
     @ParameterizedTest
     @MethodSource("validCategoryData")
     public void givenValidParams_whenCreateNewCategory_thenInstantiateACategory(CategoryParams params) {
-        Category category = Category.of(params.name, params.description, params.isActive);
+        final var category = Category.of(params.name, params.description, params.isActive);
         Assertions.assertNotNull(category.getId());
         Assertions.assertEquals(params.name, category.getName());
         Assertions.assertEquals(params.description, category.getDescription());
@@ -54,7 +54,7 @@ public class CategoryTest {
     @ParameterizedTest
     @MethodSource("invalidCategoryData")
     public void givenInvalidParam_whenUpdateCategory_thenThrowsException(CategoryParams params) {
-        Category category = Category.of("Old Name", "Old Description", params.isActive);
+        final var category = Category.of("Old Name", "Old Description", params.isActive);
         Executable executable = () -> category.update(params.name, params.description);
         final var exception = Assertions.assertThrows(DomainValidationException.class, executable);
         Assertions.assertEquals(params.message, exception.getErrors().get(0).message());
@@ -62,12 +62,14 @@ public class CategoryTest {
 
     @Test
     public void givenActiveCategory_whenDeactivateCategory_thenDeactivateCategory() {
-        String name = "Name";
-        String description = "Description";
-        Category category = Category.of(name, description, true);
+        final var expectedName = "Name";
+        final var expectedDescription = "Description";
+        final var category = Category.of(expectedName, expectedDescription, true);
+
         category.deactivate();
-        Assertions.assertEquals(name, category.getName());
-        Assertions.assertEquals(description, category.getDescription());
+
+        Assertions.assertEquals(expectedName, category.getName());
+        Assertions.assertEquals(expectedDescription, category.getDescription());
         Assertions.assertFalse(category.isActive());
         Assertions.assertNotEquals(category.getCreatedAt(), category.getUpdatedAt());
         Assertions.assertTrue(category.getDeletedAt().isEmpty());
@@ -75,12 +77,14 @@ public class CategoryTest {
 
     @Test
     public void givenInactiveCategory_whenActivateCategory_thenActivateCategory() {
-        String name = "Name";
-        String description = "Description";
-        Category category = Category.of(name, description, false);
+        final var expectedName = "Name";
+        final var expectedDescription = "Description";
+        final var category = Category.of(expectedName, expectedDescription, false);
+
         category.activate();
-        Assertions.assertEquals(name, category.getName());
-        Assertions.assertEquals(description, category.getDescription());
+
+        Assertions.assertEquals(expectedName, category.getName());
+        Assertions.assertEquals(expectedDescription, category.getDescription());
         Assertions.assertTrue(category.isActive());
         Assertions.assertNotEquals(category.getCreatedAt(), category.getUpdatedAt());
         Assertions.assertTrue(category.getDeletedAt().isEmpty());
@@ -88,38 +92,42 @@ public class CategoryTest {
 
     @Test
     public void givenACategory_whenUpdateCategory_thenUpdateCategory() {
-        String name = "New Name";
-        String description = "New Description";
-        Category category = Category.of("Old Name", "Old Description", true);
-        category.update(name, description);
-        Assertions.assertEquals(name, category.getName());
-        Assertions.assertEquals(description, category.getDescription());
+        final var expectedName = "New Name";
+        final var expectedDescription = "New Description";
+        final var category = Category.of("Old Name", "Old Description", true);
+        category.update(expectedName, expectedDescription);
+        Assertions.assertEquals(expectedName, category.getName());
+        Assertions.assertEquals(expectedDescription, category.getDescription());
         Assertions.assertNotEquals(category.getCreatedAt(), category.getUpdatedAt());
         Assertions.assertTrue(category.getDeletedAt().isEmpty());
     }
 
     public record CategoryParams(String name, String description, boolean isActive, String message) {
 
-        public static CategoryParams of(String name, String description, Boolean isActive) {
+        public static CategoryParams of(final String name, final String description, final Boolean isActive) {
             return new CategoryParams(name, description, isActive, null);
         }
 
-        public static CategoryParams byName(String name, String message) {
+        public static CategoryParams byName(final String name, final String message) {
             String error = Message.resolve("name", message);
             return new CategoryParams(name, "Description", true, error);
         }
 
-        public static CategoryParams byName(String name, String message, Integer size) {
+        public static CategoryParams byName(final String name, final String message, final Integer size) {
             String error = Message.resolve("name", message, size);
             return new CategoryParams(name, "Description", true, error);
         }
 
-        public static CategoryParams byDescription(String description, String message) {
+        public static CategoryParams byDescription(final String description, final String message) {
             String error = Message.resolve("description", message);
             return new CategoryParams("Name", description, true, error);
         }
 
-        public static CategoryParams byDescription(String description, String message, Integer size) {
+        public static CategoryParams byDescription(
+                final String description,
+                final String message,
+                final Integer size
+        ) {
             String error = Message.resolve("description", message, size);
             return new CategoryParams("Name", description, true, error);
         }
