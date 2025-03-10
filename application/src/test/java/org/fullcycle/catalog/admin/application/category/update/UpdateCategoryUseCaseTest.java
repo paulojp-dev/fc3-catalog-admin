@@ -1,6 +1,6 @@
 package org.fullcycle.catalog.admin.application.category.update;
 
-import org.fullcycle.catalog.admin.application.exception.ResourceNotFoundException;
+import org.fullcycle.catalog.admin.application.exception.CategoryNotFoundException;
 import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
 import org.fullcycle.catalog.admin.domain.category.CategoryID;
@@ -81,7 +81,7 @@ public class UpdateCategoryUseCaseTest {
                 expectedDescription,
                 expectedIsActive
         );
-        final var expectedException = ResourceNotFoundException.byId("Category", invalidId.getValue());
+        final var expectedException = CategoryNotFoundException.byId(invalidId.getValue());
 
         Mockito.when(categoryGateway.findById(Mockito.eq(invalidId)))
                 .thenReturn(Optional.empty());

@@ -1,7 +1,7 @@
 package org.fullcycle.catalog.admin.application.category.retrieve.get;
 
 import org.fullcycle.catalog.admin.application.base.UseCase;
-import org.fullcycle.catalog.admin.application.exception.ResourceNotFoundException;
+import org.fullcycle.catalog.admin.application.exception.CategoryNotFoundException;
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
 import org.fullcycle.catalog.admin.domain.category.CategoryID;
 
@@ -22,7 +22,7 @@ public class GetCategoryByIdUseCase extends UseCase<String, GetCategoryByIdOutpu
         return GetCategoryByIdOutput.from(category);
     }
 
-    private static Supplier<ResourceNotFoundException> throwNotFoundException(String id) {
-        return () -> ResourceNotFoundException.byId("Category", id);
+    private static Supplier<CategoryNotFoundException> throwNotFoundException(String id) {
+        return () -> CategoryNotFoundException.byId(id);
     }
 }

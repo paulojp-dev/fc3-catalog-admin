@@ -1,6 +1,6 @@
 package org.fullcycle.catalog.admin.application.category.retrieve.get;
 
-import org.fullcycle.catalog.admin.application.exception.ResourceNotFoundException;
+import org.fullcycle.catalog.admin.application.exception.CategoryNotFoundException;
 import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
 import org.junit.jupiter.api.Assertions;
@@ -55,7 +55,7 @@ public class GetCategoryByIdUseCaseTest {
     public void givenAnIdOfNonExistingCategory_whenExecute_theThrowsException() {
         final var existingCategory = Category.of("Name", "Description", Boolean.TRUE);
         final var expectedId = existingCategory.getId();
-        final var expectedException = ResourceNotFoundException.byId("Category", expectedId.getValue());
+        final var expectedException = CategoryNotFoundException.byId(expectedId.getValue());
 
         Mockito.when(categoryGateway.findById(Mockito.eq(expectedId)))
                 .thenReturn(Optional.empty());
