@@ -17,7 +17,11 @@ public class UpdateCategoryUseCase extends UseCase<UpdateCategoryCommand, Update
     public UpdateCategoryOutput execute(UpdateCategoryCommand command) {
         final var existingCategory = categoryGateway.findById(CategoryID.of(command.id()))
                 .orElseThrow(() -> ResourceNotFoundException.byId("Category", command.id()));
-        final var updatedCategory = existingCategory.update(command.name(), command.description(), command.isActive());
+        final var updatedCategory = existingCategory.update(
+                command.name(),
+                command.description(),
+                command.isActive()
+        );
         final var persistedCategory = categoryGateway.update(updatedCategory);
         return UpdateCategoryOutput.from(persistedCategory);
     }

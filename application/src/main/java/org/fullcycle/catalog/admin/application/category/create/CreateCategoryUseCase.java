@@ -15,6 +15,7 @@ public class CreateCategoryUseCase extends UseCase<CreateCategoryCommand, Create
     @Override
     public CreateCategoryOutput execute(final CreateCategoryCommand command) {
         final var category = Category.of(command.name(), command.description(), command.isActive());
-        return CreateCategoryOutput.from(categoryGateway.create(category));
+        final var createdCategory = categoryGateway.create(category);
+        return CreateCategoryOutput.from(createdCategory);
     }
 }
