@@ -18,11 +18,11 @@ public class GetCategoryByIdUseCase extends UseCase<String, GetCategoryByIdOutpu
     @Override
     public GetCategoryByIdOutput execute(final String id) {
         final var category = categoryGateway.findById(CategoryID.of(id))
-                .orElseThrow(throwNotFoundException(id));
+                .orElseThrow(notFoundException(id));
         return GetCategoryByIdOutput.from(category);
     }
 
-    private static Supplier<CategoryNotFoundException> throwNotFoundException(String id) {
+    private static Supplier<CategoryNotFoundException> notFoundException(String id) {
         return () -> CategoryNotFoundException.byId(id);
     }
 }

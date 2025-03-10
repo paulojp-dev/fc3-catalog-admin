@@ -18,7 +18,7 @@ public class UpdateCategoryUseCase extends UseCase<UpdateCategoryCommand, Update
     @Override
     public UpdateCategoryOutput execute(final UpdateCategoryCommand command) {
         final var existingCategory = categoryGateway.findById(CategoryID.of(command.id()))
-                .orElseThrow(throwNotFoundException(command.id()));
+                .orElseThrow(notFoundException(command.id()));
         final var updatedCategory = existingCategory.update(
                 command.name(),
                 command.description(),
@@ -28,7 +28,7 @@ public class UpdateCategoryUseCase extends UseCase<UpdateCategoryCommand, Update
         return UpdateCategoryOutput.from(persistedCategory);
     }
 
-    private static Supplier<CategoryNotFoundException> throwNotFoundException(final String id) {
+    private static Supplier<CategoryNotFoundException> notFoundException(final String id) {
         return () -> CategoryNotFoundException.byId(id);
     }
 }
