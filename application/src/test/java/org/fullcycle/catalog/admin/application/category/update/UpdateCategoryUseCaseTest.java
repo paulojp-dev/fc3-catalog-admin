@@ -41,9 +41,9 @@ public class UpdateCategoryUseCaseTest {
                 expectedIsActive
         );
 
-        Mockito.when(categoryGateway.findById(existingCategory.getId()))
+        Mockito.when(categoryGateway.findById(Mockito.eq(existingCategory.getId())))
                 .thenReturn(Optional.of(existingCategory));
-        Mockito.when(categoryGateway.update(existingCategory))
+        Mockito.when(categoryGateway.update(Mockito.eq(existingCategory)))
                 .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         final var output = useCase.execute(command);
@@ -77,7 +77,7 @@ public class UpdateCategoryUseCaseTest {
         );
         final var expectedException = ResourceNotFoundException.byId("Category", invalidId.getValue());
 
-        Mockito.when(categoryGateway.findById(invalidId))
+        Mockito.when(categoryGateway.findById(Mockito.eq(invalidId)))
                 .thenReturn(Optional.empty());
 
         Executable executable = () -> useCase.execute(command);
@@ -99,7 +99,7 @@ public class UpdateCategoryUseCaseTest {
         );
         final var expectedMessage = Message.resolve("name", Message.NOT_NULL);
 
-        Mockito.when(categoryGateway.findById(existingCategory.getId()))
+        Mockito.when(categoryGateway.findById(Mockito.eq(existingCategory.getId())))
                 .thenReturn(Optional.of(existingCategory));
 
         Executable executable = () -> useCase.execute(command);
