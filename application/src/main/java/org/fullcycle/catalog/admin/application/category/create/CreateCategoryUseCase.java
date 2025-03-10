@@ -8,7 +8,7 @@ public class CreateCategoryUseCase extends UseCase<CreateCategoryCommand, Create
 
     private final CategoryGateway categoryGateway;
 
-    public CreateCategoryUseCase(CategoryGateway categoryGateway) {
+    public CreateCategoryUseCase(final CategoryGateway categoryGateway) {
         this.categoryGateway = categoryGateway;
     }
 

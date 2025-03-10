@@ -5,6 +5,8 @@ import org.fullcycle.catalog.admin.application.exception.ResourceNotFoundExcepti
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
 import org.fullcycle.catalog.admin.domain.category.CategoryID;
 
+import java.util.function.Supplier;
+
 public class UpdateCategoryUseCase extends UseCase<UpdateCategoryCommand, UpdateCategoryOutput> {
 
     private final CategoryGateway categoryGateway;
@@ -14,9 +16,9 @@ public class UpdateCategoryUseCase extends UseCase<UpdateCategoryCommand, Update
     }
 
     @Override
-    public UpdateCategoryOutput execute(UpdateCategoryCommand command) {
+    public UpdateCategoryOutput execute(final UpdateCategoryCommand command) {
         final var existingCategory = categoryGateway.findById(CategoryID.of(command.id()))
-                .orElseThrow(() -> ResourceNotFoundException.byId("Category", command.id()));
+                .orElseThrow(throwNotFoundException(command.id()));
         final var updatedCategory = existingCategory.update(
                 command.name(),
                 command.description(),
@@ -24,5 +26,9 @@ public class UpdateCategoryUseCase extends UseCase<UpdateCategoryCommand, Update
         );
         final var persistedCategory = categoryGateway.update(updatedCategory);
         return UpdateCategoryOutput.from(persistedCategory);
+    }
+
+    private static Supplier<ResourceNotFoundException> throwNotFoundException(final String id) {
+        return () -> ResourceNotFoundException.byId("Category", id);
     }
 }
