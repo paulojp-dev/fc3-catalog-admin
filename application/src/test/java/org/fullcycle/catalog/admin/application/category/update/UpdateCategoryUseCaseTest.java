@@ -7,6 +7,7 @@ import org.fullcycle.catalog.admin.domain.category.CategoryID;
 import org.fullcycle.catalog.admin.domain.exception.DomainValidationException;
 import org.fullcycle.catalog.admin.domain.validation.Message;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -27,6 +28,11 @@ public class UpdateCategoryUseCaseTest {
 
     @Mock
     private CategoryGateway categoryGateway;
+
+    @BeforeEach
+    public void cleanUp() {
+        Mockito.reset(categoryGateway);
+    }
 
     @Test
     public void givenAValidCommand_whenExecute_thenUpdateCategory() {
