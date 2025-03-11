@@ -8,7 +8,7 @@ public record ListCategoriesOutput(
         String description,
         Boolean isActive
 ) {
-    public static ListCategoriesOutput from(Category category) {
+    public static ListCategoriesOutput from(final Category category) {
         return new ListCategoriesOutput(
                 category.getId().getValue(),
                 category.getName(),

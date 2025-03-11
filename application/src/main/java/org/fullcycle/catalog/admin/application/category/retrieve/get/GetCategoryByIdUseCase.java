@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 
 public class GetCategoryByIdUseCase extends UseCase<String, GetCategoryByIdOutput> {
 
-    private CategoryGateway categoryGateway;
+    private final CategoryGateway categoryGateway;
 
     public GetCategoryByIdUseCase(CategoryGateway categoryGateway) {
         this.categoryGateway = categoryGateway;

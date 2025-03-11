@@ -8,7 +8,7 @@ public record GetCategoryByIdOutput(
         String description,
         Boolean isActive
 ) {
-    public static GetCategoryByIdOutput from(Category category) {
+    public static GetCategoryByIdOutput from(final Category category) {
         return new GetCategoryByIdOutput(
                 category.getId().getValue(),
                 category.getName(),

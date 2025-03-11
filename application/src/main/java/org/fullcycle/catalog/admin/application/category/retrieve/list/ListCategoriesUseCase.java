@@ -7,7 +7,7 @@ import org.fullcycle.catalog.admin.domain.pagination.Pagination;
 
 public class ListCategoriesUseCase extends UseCase<CategorySearchQuery, Pagination<ListCategoriesOutput>> {
 
-    private CategoryGateway categoryGateway;
+    private final CategoryGateway categoryGateway;
 
     public ListCategoriesUseCase(CategoryGateway categoryGateway) {
         this.categoryGateway = categoryGateway;
