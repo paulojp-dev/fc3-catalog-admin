@@ -8,3 +8,11 @@ server:
     threads:
       worker: 64
       io: 4
+
+spring:
+  profiles:
+    default: development
+  datasource:
+    url: jdbc:mysql://${mysql.url}/${mysql.schema}?useSSL=true&serverTimezone=UTC&characterEncoding=UTF-8
+    username: ${mysql.username}
+    password: ${mysql.password}

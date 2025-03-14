@@ -1,0 +1,12 @@
+server:
+  port: 8080
+  undertow:
+    threads:
+      worker: 32
+      io: 2
+
+mysql:
+  username: root
+  password: catalog_admin
+  schema: catalog_admin_db
+  url: 0.0.0.0:3320
