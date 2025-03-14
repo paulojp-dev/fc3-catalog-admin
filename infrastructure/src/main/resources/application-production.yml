@@ -3,3 +3,9 @@ mysql:
   password: ${MYSQL_PASSWORD:catalog_admin}
   schema: ${MYSQL_SCHEMA:catalog_admin_db}
   url: ${MYSQL_URL:0.0.0.0:3320}
+
+spring:
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
