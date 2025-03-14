@@ -1,0 +1,17 @@
+services:
+  mysql:
+    container_name: catalog_admin_db
+    image: mysql:9.2.0
+    environment:
+      - MYSQL_USER=catalog_admin
+      - MYSQL_ROOT_PASSWORD=catalog_admin
+      - MYSQL_DATABASE=catalog_admin_db
+    security_opt:
+      - seccomp:unconfined
+    ports:
+      - 3320:3306
+    networks:
+      - catalog_admin_network
+
+networks:
+  catalog_admin_network:
