@@ -10,27 +10,33 @@ public class Category extends AggregateRoot<CategoryID> {
     private String description;
     private boolean isActive;
 
-    private Category(
-            final CategoryID id,
-            final String name,
-            final String description,
-            final boolean isActive,
-            final Instant createdAt,
-            final Instant updatedAt,
-            final Instant deletedAt
-    ) {
+    private Category(final CategoryID id,
+                     final String name,
+                     final String description,
+                     final boolean isActive,
+                     final Instant createdAt,
+                     final Instant updatedAt,
+                     final Instant deletedAt) {
         super(id, createdAt, updatedAt, deletedAt);
         this.name = name;
         this.description = description;
         this.isActive = isActive;
-
         validate();
     }
 
+    public static Category of(final CategoryID id,
+                              final String name,
+                              final String description,
+                              final boolean isActive,
+                              final Instant createdAt,
+                              final Instant updatedAt,
+                              final Instant deletedAt) {
+        return new Category(id, name, description, isActive, createdAt, updatedAt, deletedAt);
+    }
+
     public static Category of(final String name, final String description, final boolean isActive) {
-        final var id = CategoryID.unique();
         final var now = Instant.now();
-        return new Category(id, name, description, isActive, now, now, null);
+        return Category.of(CategoryID.unique(), name, description, isActive, now, now, null);
     }
 
     @Override
