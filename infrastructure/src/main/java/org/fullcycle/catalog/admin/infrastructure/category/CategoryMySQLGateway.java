@@ -22,7 +22,8 @@ public class CategoryMySQLGateway implements CategoryGateway {
 
     @Override
     public Category create(final Category category) {
-        return null;
+        final var categoryJpa = CategoryJpaEntity.from(category);
+        return repository.save(categoryJpa).toDomain();
     }
 
     @Override
