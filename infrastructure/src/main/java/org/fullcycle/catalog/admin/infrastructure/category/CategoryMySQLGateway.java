@@ -42,14 +42,11 @@ public class CategoryMySQLGateway implements CategoryGateway {
 
     @Override
     public Pagination<Category> findAll(final CategorySearchQuery query) {
-        Specification<CategoryJpaEntity> specification =
-            Optional.ofNullable(
-                query.whereFilterTerms())
-                .filter(terms -> !terms.isEmpty())
-                .map(terms -> {
-                    final var likeName = SpecificationUtil.<CategoryJpaEntity>like(terms, "name");
-                    final var likeDescription = SpecificationUtil.<CategoryJpaEntity>like(terms, "description");
-                    return likeName.or(likeDescription);
+        final var specification = Optional.ofNullable(query.whereFilterTerms())
+            .map(terms -> {
+                final var likeName = SpecificationUtil.<CategoryJpaEntity>like(terms, "name");
+                final var likeDescription = SpecificationUtil.<CategoryJpaEntity>like(terms, "description");
+                return likeName.or(likeDescription);
             }).orElse(SpecificationUtil.conjunction());
         final var sortField = Optional.ofNullable(query.sortField())
             .orElse("createdAt");
