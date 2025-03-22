@@ -42,7 +42,7 @@ public class CategoryMySQLGatewayTest {
     @Test
     public void givenAPersistedCategory_whenCallsUpdate_thenReturnAUpdatedCategory() {
         final var expectedCategory = Category.of("Old Name", "Old Description", false);
-        final var existingCategory = repository.saveAndFlush(CategoryJpaEntity.from(expectedCategory)).toDomain();
+        repository.saveAndFlush(CategoryJpaEntity.from(expectedCategory)).toDomain();
         expectedCategory.update("New Name", "New Description", true);
         Assertions.assertEquals(1, repository.count());
         final var actualCategory = gateway.update(expectedCategory);
@@ -147,5 +147,23 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertEquals(expectedQuantityPerPage, actualPagination.perPage());
         Assertions.assertEquals(0, actualPagination.currentPage());
         Assertions.assertEquals(expectedCategories.get(1).getId(), actualPagination.items().get(0).getId());
+    }
+
+    @Test
+    public void givenSomeCategories_whenCallsFindAllWithPaginationConfig_thenReturnPaginatedCategories() {
+        final var expectedCategories = List.of(
+            Category.of("First Category", "Description 1", true),
+            Category.of("Second Category", "Description 2", false),
+            Category.of("Third Category ", "Description 3", true));
+        repository.saveAllAndFlush(expectedCategories.stream().map(CategoryJpaEntity::from).toList());
+        final var expectedQuantityPerPage = 2;
+        final var expectedPage = 1;
+        final var searchQuery = new SearchQuery(expectedPage, expectedQuantityPerPage, null, null, null);
+        final var actualPagination = gateway.findAll(searchQuery);
+        Assertions.assertEquals(3, actualPagination.total());
+        Assertions.assertEquals(expectedQuantityPerPage, actualPagination.perPage());
+        Assertions.assertEquals(1, actualPagination.currentPage());
+        Assertions.assertEquals(1, actualPagination.items().size());
+        Assertions.assertEquals(expectedCategories.get(2).getId(), actualPagination.items().get(0).getId());
     }
 }
