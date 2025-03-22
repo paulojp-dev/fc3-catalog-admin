@@ -42,30 +42,26 @@ public class CategoryMySQLGateway implements CategoryGateway {
 
     @Override
     public Pagination<Category> findAll(final CategorySearchQuery query) {
-        Specification<CategoryJpaEntity> specifications =
-            Optional.ofNullable(query.whereFilterTerms()).filter(terms -> !terms.isEmpty()).map(terms -> {
-                final var likeName = SpecificationUtil.<CategoryJpaEntity>like(terms, "name");
-                final var likeDescription = SpecificationUtil.<CategoryJpaEntity>like(terms, "description");
-                return likeName.or(likeDescription);
-            }).orElse(new Specification<CategoryJpaEntity>() {
-                @Override
-                public Predicate toPredicate(Root<CategoryJpaEntity> root,
-                                             CriteriaQuery<?> query,
-                                             CriteriaBuilder criteriaBuilder) {
-                    return criteriaBuilder.conjunction();
-                }
-            });
+        Specification<CategoryJpaEntity> specification =
+            Optional.ofNullable(
+                query.whereFilterTerms())
+                .filter(terms -> !terms.isEmpty())
+                .map(terms -> {
+                    final var likeName = SpecificationUtil.<CategoryJpaEntity>like(terms, "name");
+                    final var likeDescription = SpecificationUtil.<CategoryJpaEntity>like(terms, "description");
+                    return likeName.or(likeDescription);
+            }).orElse(SpecificationUtil.conjunction());
+        final var sortField = Optional.ofNullable(query.sortField())
+            .orElse("createdAt");
         final var sortDirection = Optional.ofNullable(query.sortDirection())
             .map(Sort.Direction::fromString)
             .orElse(Sort.Direction.ASC);
-        final var sortField = Optional.ofNullable(query.sortField())
-            .orElse("createdAt");
         final var page = PageRequest.of(
             query.page(),
             query.quantityPerPage(),
             Sort.by(sortDirection, sortField)
         );
-        Page<CategoryJpaEntity> result = repository.findAll(Specification.where(specifications), page);
+        Page<CategoryJpaEntity> result = repository.findAll(Specification.where(specification), page);
         return new Pagination<>(
             result.getNumber(),
             result.getSize(),
