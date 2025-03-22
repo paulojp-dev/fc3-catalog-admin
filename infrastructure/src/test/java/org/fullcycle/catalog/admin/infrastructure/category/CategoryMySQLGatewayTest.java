@@ -1,7 +1,7 @@
 package org.fullcycle.catalog.admin.infrastructure.category;
 
-import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.base.ID;
+import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.pagination.SearchQuery;
 import org.fullcycle.catalog.admin.infrastructure.MySQLGatewayTest;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
@@ -111,5 +111,24 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertEquals(expectedCategories.get(0).getId(), actualPagination.items().get(0).getId());
         Assertions.assertEquals(expectedCategories.get(1).getId(), actualPagination.items().get(1).getId());
         Assertions.assertEquals(expectedCategories.get(2).getId(), actualPagination.items().get(2).getId());
+    }
+
+    @Test
+    public void givenSomeCategories_whenCallsFindAllWithSort_thenReturnAllCategoriesSorted() {
+        final var expectedCategories = List.of(
+            Category.of("Name A", "Description 1", true),
+            Category.of("Name B", "Description 2", false),
+            Category.of("Name C", "Description 3", true));
+        repository.saveAllAndFlush(expectedCategories.stream().map(CategoryJpaEntity::from).toList());
+        final var expectedQuantityPerPage = 10;
+        final var expectedPage = 0;
+        final var searchQuery = new SearchQuery(expectedPage, expectedQuantityPerPage, null, "name", "desc");
+        final var actualPagination = gateway.findAll(searchQuery);
+        Assertions.assertEquals(expectedCategories.size(), actualPagination.total());
+        Assertions.assertEquals(expectedQuantityPerPage, actualPagination.perPage());
+        Assertions.assertEquals(0, actualPagination.currentPage());
+        Assertions.assertEquals(expectedCategories.get(2).getId(), actualPagination.items().get(0).getId());
+        Assertions.assertEquals(expectedCategories.get(1).getId(), actualPagination.items().get(1).getId());
+        Assertions.assertEquals(expectedCategories.get(0).getId(), actualPagination.items().get(2).getId());
     }
 }
