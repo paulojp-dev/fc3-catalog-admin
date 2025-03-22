@@ -58,4 +58,25 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertTrue(actualCategory.getCreatedAt().isBefore(actualCategory.getUpdatedAt()));
         Assertions.assertTrue(actualCategory.getDeletedAt().isEmpty());
     }
+
+    @Test
+    public void givenAPersistedCategory_whenCallsDelete_thenDeletesCategory() {
+        final var category = Category.of("Name", "Description", true);
+        repository.saveAndFlush(CategoryJpaEntity.from(category));
+
+        Assertions.assertEquals(1, repository.count());
+
+        gateway.deleteById(category.getId());
+
+        Assertions.assertEquals(0, repository.count());
+    }
+
+    @Test
+    public void givenNoCategory_whenCallsDelete_thenNothing() {
+        final var category = Category.of("Name", "Description", true);
+
+        gateway.deleteById(category.getId());
+
+        Assertions.assertEquals(0, repository.count());
+    }
 }
