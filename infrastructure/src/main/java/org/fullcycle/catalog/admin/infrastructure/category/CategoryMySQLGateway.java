@@ -16,33 +16,37 @@ public class CategoryMySQLGateway implements CategoryGateway {
 
     private final CategoryJpaRepository repository;
 
-    public CategoryMySQLGateway(CategoryJpaRepository repository) {
+    public CategoryMySQLGateway(final CategoryJpaRepository repository) {
         this.repository = repository;
     }
 
     @Override
     public Category create(final Category category) {
+        return save(category);
+    }
+
+    @Override
+    public Optional<Category> findById(final CategoryID id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Pagination<Category> findAll(final CategorySearchQuery searchQuery) {
+        return null;
+    }
+
+    @Override
+    public Category update(final Category category) {
+        return save(category);
+    }
+
+    private Category save(final Category category) {
         final var categoryJpa = CategoryJpaEntity.from(category);
         return repository.save(categoryJpa).toDomain();
     }
 
     @Override
-    public Optional<Category> findById(CategoryID id) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Pagination<Category> findAll(CategorySearchQuery searchQuery) {
-        return null;
-    }
-
-    @Override
-    public Category update(Category category) {
-        return null;
-    }
-
-    @Override
-    public void deleteById(CategoryID id) {
+    public void deleteById(final CategoryID id) {
 
     }
 }
