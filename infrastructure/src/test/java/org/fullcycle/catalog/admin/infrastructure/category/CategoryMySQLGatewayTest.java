@@ -1,6 +1,7 @@
 package org.fullcycle.catalog.admin.infrastructure.category;
 
 import org.fullcycle.catalog.admin.domain.category.Category;
+import org.fullcycle.catalog.admin.domain.category.CategoryID;
 import org.fullcycle.catalog.admin.infrastructure.MySQLGatewayTest;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaRepository;
@@ -82,5 +83,11 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertEquals(expectedCategory.getCreatedAt(), actualCategory.getCreatedAt());
         Assertions.assertEquals(expectedCategory.getUpdatedAt(), actualCategory.getUpdatedAt());
         Assertions.assertTrue(actualCategory.getDeletedAt().isEmpty());
+    }
+
+    @Test
+    public void givenNoCategory_whenCallsFindById_thenReturnNull() {
+        final var result = gateway.findById(CategoryID.of("null"));
+        Assertions.assertTrue(result.isEmpty());
     }
 }
