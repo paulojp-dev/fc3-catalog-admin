@@ -22,11 +22,8 @@ public class CategoryMySQLGatewayTest {
     @Test
     public void givenAValidCategory_whenCallsCreate_thenReturnANewCategory() {
         final var expectedCategory = Category.of("Category Name", "Category Description", true);
-
         Assertions.assertEquals(0, repository.count());
-
         final var actualCategory = gateway.create(expectedCategory);
-
         Assertions.assertEquals(1, repository.count());
         Assertions.assertNotSame(expectedCategory, actualCategory);
         Assertions.assertEquals(expectedCategory.getId(), actualCategory.getId());
@@ -43,11 +40,8 @@ public class CategoryMySQLGatewayTest {
         final var expectedCategory = Category.of("Old Name", "Old Description", false);
         final var existingCategory  =repository.saveAndFlush(CategoryJpaEntity.from(expectedCategory)).toDomain();
         expectedCategory.update("New Name", "New Description", true);
-
         Assertions.assertEquals(1, repository.count());
-
         final var actualCategory = gateway.update(expectedCategory);
-
         Assertions.assertEquals(1, repository.count());
         Assertions.assertNotSame(expectedCategory, actualCategory);
         Assertions.assertEquals(expectedCategory.getId(), actualCategory.getId());
@@ -63,20 +57,15 @@ public class CategoryMySQLGatewayTest {
     public void givenAPersistedCategory_whenCallsDelete_thenDeletesCategory() {
         final var category = Category.of("Name", "Description", true);
         repository.saveAndFlush(CategoryJpaEntity.from(category));
-
         Assertions.assertEquals(1, repository.count());
-
         gateway.deleteById(category.getId());
-
         Assertions.assertEquals(0, repository.count());
     }
 
     @Test
     public void givenNoCategory_whenCallsDelete_thenNothing() {
         final var category = Category.of("Name", "Description", true);
-
         gateway.deleteById(category.getId());
-
         Assertions.assertEquals(0, repository.count());
     }
 }
