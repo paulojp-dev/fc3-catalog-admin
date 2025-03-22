@@ -40,8 +40,8 @@ public class CategoryMySQLGateway implements CategoryGateway {
     public Pagination<Category> findAll(final SearchQuery query) {
         final var specification = Optional.ofNullable(query.whereFilterTerms())
             .map(terms -> {
-                final var likeName = SpecificationUtil.<CategoryJpaEntity>like(terms, "name");
-                final var likeDescription = SpecificationUtil.<CategoryJpaEntity>like(terms, "description");
+                final var likeName = SpecificationUtil.<CategoryJpaEntity>like( "name", terms);
+                final var likeDescription = SpecificationUtil.<CategoryJpaEntity>like("description", terms);
                 return likeName.or(likeDescription);
             }).orElse(SpecificationUtil.conjunction());
         final var sortField = Optional.ofNullable(query.sortField())

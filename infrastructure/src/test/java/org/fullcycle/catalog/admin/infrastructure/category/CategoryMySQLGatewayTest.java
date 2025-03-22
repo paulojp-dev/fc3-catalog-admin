@@ -95,7 +95,7 @@ public class CategoryMySQLGatewayTest {
     }
 
     @Test
-    public void givenSomeCategories_whenCallsFindAll_thenReturnAllCategoriesPaginated() {
+    public void givenSomeCategories_whenCallsFindAll_thenReturnAllPaginatedCategories() {
         final var expectedCategories = List.of(
             Category.of("Name 1", "Description 1", true),
             Category.of("Name 2", "Description 2", false),
@@ -114,7 +114,7 @@ public class CategoryMySQLGatewayTest {
     }
 
     @Test
-    public void givenSomeCategories_whenCallsFindAllWithSort_thenReturnAllCategoriesSorted() {
+    public void givenSomeCategories_whenCallsFindAllWithSort_thenReturnAllSortedCategories() {
         final var expectedCategories = List.of(
             Category.of("Name A", "Description 1", true),
             Category.of("Name B", "Description 2", false),
@@ -130,5 +130,22 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertEquals(expectedCategories.get(2).getId(), actualPagination.items().get(0).getId());
         Assertions.assertEquals(expectedCategories.get(1).getId(), actualPagination.items().get(1).getId());
         Assertions.assertEquals(expectedCategories.get(0).getId(), actualPagination.items().get(2).getId());
+    }
+
+    @Test
+    public void givenSomeCategories_whenCallsFindAllWithFilterTerms_thenReturnFilteredCategories() {
+        final var expectedCategories = List.of(
+            Category.of("First Category", "Description 1", true),
+            Category.of("Second Category", "Description 2", false),
+            Category.of("Third Category ", "Description 3", true));
+        repository.saveAllAndFlush(expectedCategories.stream().map(CategoryJpaEntity::from).toList());
+        final var expectedQuantityPerPage = 10;
+        final var expectedPage = 0;
+        final var searchQuery = new SearchQuery(expectedPage, expectedQuantityPerPage, "Second", null, null);
+        final var actualPagination = gateway.findAll(searchQuery);
+        Assertions.assertEquals(1, actualPagination.total());
+        Assertions.assertEquals(expectedQuantityPerPage, actualPagination.perPage());
+        Assertions.assertEquals(0, actualPagination.currentPage());
+        Assertions.assertEquals(expectedCategories.get(1).getId(), actualPagination.items().get(0).getId());
     }
 }
