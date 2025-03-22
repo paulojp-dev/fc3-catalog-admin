@@ -27,7 +27,8 @@ public class CategoryMySQLGateway implements CategoryGateway {
 
     @Override
     public Optional<Category> findById(final CategoryID id) {
-        return Optional.empty();
+        final var result = repository.findById(id.getValue());
+        return result.map(CategoryJpaEntity::toDomain);
     }
 
     @Override
