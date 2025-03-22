@@ -1,13 +1,9 @@
 package org.fullcycle.catalog.admin.infrastructure.category;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
-import org.fullcycle.catalog.admin.domain.category.CategoryID;
-import org.fullcycle.catalog.admin.domain.category.CategorySearchQuery;
+import org.fullcycle.catalog.admin.domain.base.ID;
+import org.fullcycle.catalog.admin.domain.pagination.SearchQuery;
 import org.fullcycle.catalog.admin.domain.pagination.Pagination;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaRepository;
@@ -35,13 +31,13 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public Optional<Category> findById(final CategoryID id) {
+    public Optional<Category> findById(final ID id) {
         final var result = repository.findById(id.getValue());
         return result.map(CategoryJpaEntity::toDomain);
     }
 
     @Override
-    public Pagination<Category> findAll(final CategorySearchQuery query) {
+    public Pagination<Category> findAll(final SearchQuery query) {
         final var specification = Optional.ofNullable(query.whereFilterTerms())
             .map(terms -> {
                 final var likeName = SpecificationUtil.<CategoryJpaEntity>like(terms, "name");
@@ -78,7 +74,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public void deleteById(final CategoryID id) {
+    public void deleteById(final ID id) {
         repository.deleteById(id.getValue());
     }
 }

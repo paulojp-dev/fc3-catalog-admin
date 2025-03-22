@@ -3,7 +3,7 @@ package org.fullcycle.catalog.admin.application.category.update;
 import org.fullcycle.catalog.admin.application.base.UseCase;
 import org.fullcycle.catalog.admin.application.exception.CategoryNotFoundException;
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
-import org.fullcycle.catalog.admin.domain.category.CategoryID;
+import org.fullcycle.catalog.admin.domain.base.ID;
 
 import java.util.function.Supplier;
 
@@ -17,7 +17,7 @@ public class UpdateCategoryUseCase extends UseCase<UpdateCategoryCommand, Update
 
     @Override
     public UpdateCategoryOutput execute(final UpdateCategoryCommand command) {
-        final var existingCategory = categoryGateway.findById(CategoryID.of(command.id()))
+        final var existingCategory = categoryGateway.findById(ID.of(command.id()))
                 .orElseThrow(notFoundException(command.id()));
         final var updatedCategory = existingCategory.update(
                 command.name(),

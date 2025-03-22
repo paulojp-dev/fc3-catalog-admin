@@ -2,7 +2,7 @@ package org.fullcycle.catalog.admin.application.category.retrieve.list;
 
 import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
-import org.fullcycle.catalog.admin.domain.category.CategorySearchQuery;
+import org.fullcycle.catalog.admin.domain.pagination.SearchQuery;
 import org.fullcycle.catalog.admin.domain.pagination.Pagination;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +41,7 @@ public class ListCategoriesUseCaseTest {
         final var expectedTerms = "";
         final var expectedSort = "createdAt";
         final var expectedDirection = "asc";
-        final var query = new CategorySearchQuery(
+        final var query = new SearchQuery(
                 expectedPage,
                 expectedPerPage,
                 expectedTerms,
@@ -75,7 +75,7 @@ public class ListCategoriesUseCaseTest {
         final var expectedTerms = "";
         final var expectedSort = "createdAt";
         final var expectedDirection = "asc";
-        final var query = new CategorySearchQuery(
+        final var query = new SearchQuery(
                 expectedPage,
                 expectedPerPage,
                 expectedTerms,

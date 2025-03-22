@@ -1,16 +1,17 @@
 package org.fullcycle.catalog.admin.domain.category;
 
 import org.fullcycle.catalog.admin.domain.base.AggregateRoot;
+import org.fullcycle.catalog.admin.domain.base.ID;
 
 import java.time.Instant;
 
-public class Category extends AggregateRoot<CategoryID> {
+public class Category extends AggregateRoot<ID> {
 
     private String name;
     private String description;
     private boolean isActive;
 
-    private Category(final CategoryID id,
+    private Category(final ID id,
                      final String name,
                      final String description,
                      final boolean isActive,
@@ -24,7 +25,7 @@ public class Category extends AggregateRoot<CategoryID> {
         validate();
     }
 
-    public static Category of(final CategoryID id,
+    public static Category of(final ID id,
                               final String name,
                               final String description,
                               final boolean isActive,
@@ -36,7 +37,7 @@ public class Category extends AggregateRoot<CategoryID> {
 
     public static Category of(final String name, final String description, final boolean isActive) {
         final var now = Instant.now();
-        return Category.of(CategoryID.unique(), name, description, isActive, now, now, null);
+        return Category.of(ID.unique(), name, description, isActive, now, now, null);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class Category extends AggregateRoot<CategoryID> {
         return this;
     }
 
-    public CategoryID getId() {
+    public ID getId() {
         return id;
     }
 

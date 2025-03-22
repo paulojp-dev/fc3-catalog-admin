@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import org.fullcycle.catalog.admin.domain.category.Category;
-import org.fullcycle.catalog.admin.domain.category.CategoryID;
+import org.fullcycle.catalog.admin.domain.base.ID;
 
 import java.time.Instant;
 
@@ -66,7 +66,7 @@ public class CategoryJpaEntity {
 
     public Category toDomain() {
         return Category.of(
-            CategoryID.of(this.getId()),
+            ID.of(this.getId()),
             this.getName(),
             this.getDescription(),
             this.getActive(),
