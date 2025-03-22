@@ -2,6 +2,7 @@ package org.fullcycle.catalog.admin.infrastructure.category;
 
 import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryID;
+import org.fullcycle.catalog.admin.domain.category.CategorySearchQuery;
 import org.fullcycle.catalog.admin.infrastructure.MySQLGatewayTest;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaRepository;
@@ -9,6 +10,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+
+import java.util.List;
 
 @MySQLGatewayTest
 @Import({CategoryMySQLGateway.class})
@@ -39,7 +42,7 @@ public class CategoryMySQLGatewayTest {
     @Test
     public void givenAPersistedCategory_whenCallsUpdate_thenReturnAUpdatedCategory() {
         final var expectedCategory = Category.of("Old Name", "Old Description", false);
-        final var existingCategory  =repository.saveAndFlush(CategoryJpaEntity.from(expectedCategory)).toDomain();
+        final var existingCategory = repository.saveAndFlush(CategoryJpaEntity.from(expectedCategory)).toDomain();
         expectedCategory.update("New Name", "New Description", true);
         Assertions.assertEquals(1, repository.count());
         final var actualCategory = gateway.update(expectedCategory);
@@ -89,5 +92,24 @@ public class CategoryMySQLGatewayTest {
     public void givenNoCategory_whenCallsFindById_thenReturnNull() {
         final var result = gateway.findById(CategoryID.of("null"));
         Assertions.assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void givenSomeCategories_whenCallsFindAll_thenReturnAllCategoriesPaginated() {
+        final var expectedCategories = List.of(
+            Category.of("Name 1", "Description 1", true),
+            Category.of("Name 2", "Description 2", false),
+            Category.of("Name 3", "Description 3", true));
+        repository.saveAllAndFlush(expectedCategories.stream().map(CategoryJpaEntity::from).toList());
+        final var expectedQuantityPerPage = 10;
+        final var expectedPage = 0;
+        final var searchQuery = new CategorySearchQuery(expectedPage, expectedQuantityPerPage, null, null, null);
+        final var actualPagination = gateway.findAll(searchQuery);
+        Assertions.assertEquals(expectedCategories.size(), actualPagination.total());
+        Assertions.assertEquals(expectedQuantityPerPage, actualPagination.perPage());
+        Assertions.assertEquals(0, actualPagination.currentPage());
+        Assertions.assertEquals(expectedCategories.get(0).getId(), actualPagination.items().get(0).getId());
+        Assertions.assertEquals(expectedCategories.get(1).getId(), actualPagination.items().get(1).getId());
+        Assertions.assertEquals(expectedCategories.get(2).getId(), actualPagination.items().get(2).getId());
     }
 }

@@ -1,5 +1,9 @@
 package org.fullcycle.catalog.admin.infrastructure.category;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
 import org.fullcycle.catalog.admin.domain.category.CategoryID;
@@ -7,6 +11,11 @@ import org.fullcycle.catalog.admin.domain.category.CategorySearchQuery;
 import org.fullcycle.catalog.admin.domain.pagination.Pagination;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaRepository;
+import org.fullcycle.catalog.admin.infrastructure.utils.SpecificationUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -32,8 +41,37 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public Pagination<Category> findAll(final CategorySearchQuery searchQuery) {
-        return null;
+    public Pagination<Category> findAll(final CategorySearchQuery query) {
+        Specification<CategoryJpaEntity> specifications =
+            Optional.ofNullable(query.whereFilterTerms()).filter(terms -> !terms.isEmpty()).map(terms -> {
+                final var likeName = SpecificationUtil.<CategoryJpaEntity>like(terms, "name");
+                final var likeDescription = SpecificationUtil.<CategoryJpaEntity>like(terms, "description");
+                return likeName.or(likeDescription);
+            }).orElse(new Specification<CategoryJpaEntity>() {
+                @Override
+                public Predicate toPredicate(Root<CategoryJpaEntity> root,
+                                             CriteriaQuery<?> query,
+                                             CriteriaBuilder criteriaBuilder) {
+                    return criteriaBuilder.conjunction();
+                }
+            });
+        final var sortDirection = Optional.ofNullable(query.sortDirection())
+            .map(Sort.Direction::fromString)
+            .orElse(Sort.Direction.ASC);
+        final var sortField = Optional.ofNullable(query.sortField())
+            .orElse("createdAt");
+        final var page = PageRequest.of(
+            query.page(),
+            query.quantityPerPage(),
+            Sort.by(sortDirection, sortField)
+        );
+        Page<CategoryJpaEntity> result = repository.findAll(Specification.where(specifications), page);
+        return new Pagination<>(
+            result.getNumber(),
+            result.getSize(),
+            result.getTotalElements(),
+            result.map(CategoryJpaEntity::toDomain).toList()
+        );
     }
 
     @Override
