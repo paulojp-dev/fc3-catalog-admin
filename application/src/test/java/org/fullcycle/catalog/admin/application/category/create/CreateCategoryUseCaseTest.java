@@ -45,13 +45,13 @@ public class CreateCategoryUseCaseTest {
         Mockito.verify(categoryGateway, Mockito.times(1))
             .create(ArgumentMatchers.argThat(
                 category -> Objects.equals(expectedName, category.getName())
-                            && Objects.equals(expectedDescription, category.getDescription())
-                            && Objects.equals(expectedIsActive, category.isActive())
-                            && Objects.nonNull(category.getId())
-                            && Objects.nonNull(category.getCreatedAt())
-                            && Objects.nonNull(category.getUpdatedAt())
-                            && Objects.equals(category.getCreatedAt(), category.getUpdatedAt())
-                            && Objects.equals(true, category.getDeletedAt().isEmpty())
+                    && Objects.equals(expectedDescription, category.getDescription())
+                    && Objects.equals(expectedIsActive, category.isActive())
+                    && Objects.nonNull(category.getId())
+                    && Objects.nonNull(category.getCreatedAt())
+                    && Objects.nonNull(category.getUpdatedAt())
+                    && Objects.equals(category.getCreatedAt(), category.getUpdatedAt())
+                    && Objects.equals(true, category.getDeletedAt().isEmpty())
             ));
     }
 

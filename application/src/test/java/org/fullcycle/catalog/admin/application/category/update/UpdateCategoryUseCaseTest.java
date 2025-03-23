@@ -56,13 +56,13 @@ public class UpdateCategoryUseCaseTest {
         Mockito.verify(categoryGateway, Mockito.times(1))
             .update(Mockito.argThat(
                 category -> Objects.equals(expectedName, category.getName())
-                            && Objects.equals(expectedDescription, category.getDescription())
-                            && Objects.equals(expectedIsActive, category.isActive())
-                            && Objects.equals(command.id(), category.getId().getValue())
-                            && Objects.nonNull(category.getCreatedAt())
-                            && Objects.nonNull(category.getUpdatedAt())
-                            && Objects.equals(true, category.getCreatedAt().isBefore(category.getUpdatedAt()))
-                            && Objects.equals(true, category.getDeletedAt().isEmpty())
+                    && Objects.equals(expectedDescription, category.getDescription())
+                    && Objects.equals(expectedIsActive, category.isActive())
+                    && Objects.equals(command.id(), category.getId().getValue())
+                    && Objects.nonNull(category.getCreatedAt())
+                    && Objects.nonNull(category.getUpdatedAt())
+                    && Objects.equals(true, category.getCreatedAt().isBefore(category.getUpdatedAt()))
+                    && Objects.equals(true, category.getDeletedAt().isEmpty())
             ));
     }
 

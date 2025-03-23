@@ -87,7 +87,7 @@ public class CategoryTest {
         Assertions.assertTrue(category.getDeletedAt().isEmpty());
     }
 
-    static List<CategoryParams> invalidCategoryData() {
+    private static List<CategoryParams> invalidCategoryData() {
         return List.of(
             CategoryParams.byName(null, Message.NOT_NULL),
             CategoryParams.byName("   ", Message.NOT_EMPTY),
@@ -97,7 +97,7 @@ public class CategoryTest {
         );
     }
 
-    static List<CategoryParams> validCategoryData() {
+    private static List<CategoryParams> validCategoryData() {
         return List.of(
             CategoryParams.of("a".repeat(255), "Description", true),
             CategoryParams.of("a".repeat(3), null, false)
