@@ -1,10 +1,10 @@
 package org.fullcycle.catalog.admin.infrastructure.category;
 
+import org.fullcycle.catalog.admin.domain.base.ID;
 import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
-import org.fullcycle.catalog.admin.domain.base.ID;
-import org.fullcycle.catalog.admin.domain.pagination.SearchQuery;
 import org.fullcycle.catalog.admin.domain.pagination.Pagination;
+import org.fullcycle.catalog.admin.domain.pagination.SearchQuery;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaRepository;
 import org.fullcycle.catalog.admin.infrastructure.utils.SpecificationUtil;
@@ -38,9 +38,9 @@ public class CategoryMySQLGateway implements CategoryGateway {
 
     @Override
     public Pagination<Category> findAll(final SearchQuery query) {
-        final var specification = Optional.ofNullable(query.whereFilterTerms())
+        final Specification<CategoryJpaEntity> specification = Optional.ofNullable(query.whereFilterTerms())
             .map(terms -> {
-                final var likeName = SpecificationUtil.<CategoryJpaEntity>like( "name", terms);
+                final var likeName = SpecificationUtil.<CategoryJpaEntity>like("name", terms);
                 final var likeDescription = SpecificationUtil.<CategoryJpaEntity>like("description", terms);
                 return likeName.or(likeDescription);
             }).orElse(SpecificationUtil.conjunction());
@@ -68,13 +68,13 @@ public class CategoryMySQLGateway implements CategoryGateway {
         return save(category);
     }
 
-    private Category save(final Category category) {
-        final var categoryJpa = CategoryJpaEntity.from(category);
-        return repository.save(categoryJpa).toDomain();
-    }
-
     @Override
     public void deleteById(final ID id) {
         repository.deleteById(id.getValue());
+    }
+
+    private Category save(final Category category) {
+        final var categoryJpa = CategoryJpaEntity.from(category);
+        return repository.save(categoryJpa).toDomain();
     }
 }

@@ -13,7 +13,7 @@ public class Message {
 
     public static String resolve(final String attribute, final String message, Integer param) {
         return Message
-                .resolve(attribute, message)
-                .replace("${param}", param.toString());
+            .resolve(attribute, message)
+            .replace("${param}", param.toString());
     }
 }

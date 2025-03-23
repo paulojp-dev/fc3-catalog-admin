@@ -2,8 +2,8 @@ package org.fullcycle.catalog.admin.application.category.retrieve.list;
 
 import org.fullcycle.catalog.admin.application.base.UseCase;
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
-import org.fullcycle.catalog.admin.domain.pagination.SearchQuery;
 import org.fullcycle.catalog.admin.domain.pagination.Pagination;
+import org.fullcycle.catalog.admin.domain.pagination.SearchQuery;
 
 public class ListCategoriesUseCase extends UseCase<SearchQuery, Pagination<ListCategoriesOutput>> {
 
@@ -16,6 +16,6 @@ public class ListCategoriesUseCase extends UseCase<SearchQuery, Pagination<ListC
     @Override
     public Pagination<ListCategoriesOutput> execute(SearchQuery query) {
         return categoryGateway.findAll(query)
-                .map(ListCategoriesOutput::from);
+            .map(ListCategoriesOutput::from);
     }
 }

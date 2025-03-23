@@ -2,8 +2,8 @@ package org.fullcycle.catalog.admin.application.category.retrieve.list;
 
 import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
-import org.fullcycle.catalog.admin.domain.pagination.SearchQuery;
 import org.fullcycle.catalog.admin.domain.pagination.Pagination;
+import org.fullcycle.catalog.admin.domain.pagination.SearchQuery;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,9 +32,9 @@ public class ListCategoriesUseCaseTest {
     @Test
     public void givenExistingCategories_whenExecute_thenReturnCategories() {
         final var expectedCategories = List.of(
-                Category.of("Category 1", "...", true),
-                Category.of("Category 2", "...", false),
-                Category.of("Category 3", "...", true)
+            Category.of("Category 1", "...", true),
+            Category.of("Category 2", "...", false),
+            Category.of("Category 3", "...", true)
         );
         final var expectedPage = 1;
         final var expectedPerPage = 1;
@@ -42,25 +42,22 @@ public class ListCategoriesUseCaseTest {
         final var expectedSort = "createdAt";
         final var expectedDirection = "asc";
         final var query = new SearchQuery(
-                expectedPage,
-                expectedPerPage,
-                expectedTerms,
-                expectedSort,
-                expectedDirection
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection
         );
         final var expectedPagination = new Pagination<>(
-                expectedPage,
-                expectedPerPage,
-                expectedCategories.stream().count(),
-                expectedCategories
+            expectedPage,
+            expectedPerPage,
+            expectedCategories.stream().count(),
+            expectedCategories
         );
         final var expectedOutput = expectedPagination.map(ListCategoriesOutput::from);
-
         Mockito.when(categoryGateway.findAll(Mockito.eq(query)))
-                .thenReturn(expectedPagination);
-
+            .thenReturn(expectedPagination);
         final var output = useCase.execute(query);
-
         Assertions.assertEquals(expectedOutput, output);
         Assertions.assertEquals(expectedPage, output.currentPage());
         Assertions.assertEquals(expectedPerPage, output.perPage());
@@ -76,25 +73,22 @@ public class ListCategoriesUseCaseTest {
         final var expectedSort = "createdAt";
         final var expectedDirection = "asc";
         final var query = new SearchQuery(
-                expectedPage,
-                expectedPerPage,
-                expectedTerms,
-                expectedSort,
-                expectedDirection
+            expectedPage,
+            expectedPerPage,
+            expectedTerms,
+            expectedSort,
+            expectedDirection
         );
         final var expectedPagination = new Pagination<Category>(
-                expectedPage,
-                expectedPerPage,
-                0L,
-                List.of()
+            expectedPage,
+            expectedPerPage,
+            0L,
+            List.of()
         );
         final var expectedOutput = expectedPagination.map(ListCategoriesOutput::from);
-
         Mockito.when(categoryGateway.findAll(Mockito.eq(query)))
-                .thenReturn(expectedPagination);
-
+            .thenReturn(expectedPagination);
         final var output = useCase.execute(query);
-
         Assertions.assertEquals(expectedOutput, output);
         Assertions.assertEquals(expectedPage, output.currentPage());
         Assertions.assertEquals(expectedPerPage, output.perPage());

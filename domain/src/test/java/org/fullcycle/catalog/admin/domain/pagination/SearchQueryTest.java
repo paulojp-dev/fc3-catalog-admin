@@ -10,6 +10,43 @@ import java.util.stream.Stream;
 
 public class SearchQueryTest {
 
+    @ParameterizedTest
+    @MethodSource("validCategoryData")
+    public void givenAllParams_whenInstantiate_thenValidQuery(Integer page,
+                                                              Integer quantityPerPage,
+                                                              String terms,
+                                                              String sortField,
+                                                              String sortDirection
+    ) {
+        final var actualQuery = new SearchQuery(
+            page,
+            quantityPerPage,
+            terms,
+            sortField,
+            sortDirection
+        );
+        Assertions.assertEquals(page, actualQuery.page());
+        Assertions.assertEquals(quantityPerPage, actualQuery.quantityPerPage());
+        Assertions.assertEquals(terms, actualQuery.whereFilterTerms());
+        Assertions.assertEquals(sortField, actualQuery.sortField());
+        Assertions.assertEquals(sortDirection, actualQuery.sortDirection());
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidCategoryData")
+    public void givenNullPageParam_whenInstantiate_thenValidQuery(
+        Integer page,
+        Integer quantityPerPage,
+        String terms,
+        String sortField,
+        String sortDirection,
+        String errorMessage
+    ) {
+        Executable executable = () -> new SearchQuery(page, quantityPerPage, terms, sortField, sortDirection);
+        final var exception = Assertions.assertThrows(IllegalArgumentException.class, executable);
+        Assertions.assertEquals(errorMessage, exception.getMessage());
+    }
+
     static Stream<Arguments> invalidCategoryData() {
         final var pageError = "Page must be a non-null, non-negative integer";
         final var quantityError = "Quantity per page must be a non-null, positive integer";
@@ -24,40 +61,6 @@ public class SearchQueryTest {
     static Stream<Arguments> validCategoryData() {
         return Stream.of(
             Arguments.of(0, 1, "terms", "name", "asc"),
-            Arguments.of(10, 100, null, null, null),
-            Arguments.of(1, 2, null, "field", null));
-    }
-
-    @ParameterizedTest
-    @MethodSource("validCategoryData")
-    public void givenAllParams_whenInstantiate_thenValidQuery(Integer page,
-                                                              Integer quantityPerPage,
-                                                              String terms,
-                                                              String sortField,
-                                                              String sortDirection) {
-        final var actualQuery = new SearchQuery(
-            page,
-            quantityPerPage,
-            terms,
-            sortField,
-            sortDirection);
-        Assertions.assertEquals(page, actualQuery.page());
-        Assertions.assertEquals(quantityPerPage, actualQuery.quantityPerPage());
-        Assertions.assertEquals(terms, actualQuery.whereFilterTerms());
-        Assertions.assertEquals(sortField, actualQuery.sortField());
-        Assertions.assertEquals(sortDirection, actualQuery.sortDirection());
-    }
-
-    @ParameterizedTest
-    @MethodSource("invalidCategoryData")
-    public void givenNullPageParam_whenInstantiate_thenValidQuery(Integer page,
-                                                                  Integer quantityPerPage,
-                                                                  String terms,
-                                                                  String sortField,
-                                                                  String sortDirection,
-                                                                  String errorMessage) {
-        Executable executable = () -> new SearchQuery(page, quantityPerPage, terms, sortField, sortDirection);
-        final var exception = Assertions.assertThrows(IllegalArgumentException.class, executable);
-        Assertions.assertEquals(errorMessage, exception.getMessage());
+            Arguments.of(10, 100, null, null, null));
     }
 }

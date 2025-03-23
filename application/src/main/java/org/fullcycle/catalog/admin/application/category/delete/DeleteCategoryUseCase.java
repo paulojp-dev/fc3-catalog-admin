@@ -1,8 +1,8 @@
 package org.fullcycle.catalog.admin.application.category.delete;
 
 import org.fullcycle.catalog.admin.application.base.NoOutputUseCase;
-import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
 import org.fullcycle.catalog.admin.domain.base.ID;
+import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
 
 public class DeleteCategoryUseCase extends NoOutputUseCase<String> {
 

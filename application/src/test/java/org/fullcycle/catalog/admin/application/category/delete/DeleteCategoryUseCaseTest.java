@@ -1,8 +1,8 @@
 package org.fullcycle.catalog.admin.application.category.delete;
 
+import org.fullcycle.catalog.admin.domain.base.ID;
 import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
-import org.fullcycle.catalog.admin.domain.base.ID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,15 +33,15 @@ public class DeleteCategoryUseCaseTest {
         final var expectedId = existingCategory.getId();
 
         Mockito.when(categoryGateway.findById(Mockito.eq(expectedId)))
-                .thenReturn(Optional.of(existingCategory));
+            .thenReturn(Optional.of(existingCategory));
         Mockito.doNothing()
-                .when(categoryGateway)
-                .deleteById(Mockito.eq(expectedId));
+            .when(categoryGateway)
+            .deleteById(Mockito.eq(expectedId));
 
         useCase.execute(expectedId.getValue());
 
         Mockito.verify(categoryGateway, Mockito.times(1))
-                .deleteById(Mockito.eq(expectedId));
+            .deleteById(Mockito.eq(expectedId));
     }
 
     @Test

@@ -29,7 +29,9 @@ public class ID extends Identifier {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         final ID that = (ID) o;
         return Objects.equals(getValue(), that.getValue());
     }

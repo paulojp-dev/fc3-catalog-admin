@@ -8,13 +8,13 @@ import java.util.Optional;
 
 public interface CategoryGateway {
 
-    public Category create(Category category);
+    Category create(Category category);
 
-    public Optional<Category> findById(ID id);
+    Optional<Category> findById(ID id);
 
-    public Pagination<Category> findAll(SearchQuery searchQuery);
+    Pagination<Category> findAll(SearchQuery searchQuery);
 
-    public Category update(Category category);
+    Category update(Category category);
 
-    public void deleteById(ID id);
+    void deleteById(ID id);
 }

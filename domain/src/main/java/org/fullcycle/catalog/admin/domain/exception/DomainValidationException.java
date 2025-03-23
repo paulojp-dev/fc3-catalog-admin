@@ -1,6 +1,7 @@
 package org.fullcycle.catalog.admin.domain.exception;
 
 import org.fullcycle.catalog.admin.domain.validation.Error;
+
 import java.util.List;
 
 public class DomainValidationException extends NoStackTraceException {

@@ -17,12 +17,6 @@ public abstract class Validation {
 
     public abstract void validate();
 
-    protected RulesBag setRules(final String field) {
-        RulesBag rulesBag = new RulesBag(field);
-        rulesBags.add(rulesBag);
-        return rulesBag;
-    }
-
     public void throwIfErrors() {
         for (RulesBag rulesBag : rulesBags) {
             String message = rulesBag.getMessage();
@@ -33,5 +27,11 @@ public abstract class Validation {
         if (!errors.isEmpty()) {
             throw new DomainValidationException(errors);
         }
+    }
+
+    protected RulesBag setRules(final String field) {
+        RulesBag rulesBag = new RulesBag(field);
+        rulesBags.add(rulesBag);
+        return rulesBag;
     }
 }

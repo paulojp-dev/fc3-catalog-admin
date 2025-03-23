@@ -13,13 +13,13 @@ public class CategoryValidation extends Validation {
     @Override
     public void validate() {
         setRules("name")
-                .required()
-                .min(3)
-                .max(255)
-                .apply(category.getName());
+            .required()
+            .min(3)
+            .max(255)
+            .apply(category.getName());
         setRules("description")
-                .max(255)
-                .apply(category.getDescription());
+            .max(255)
+            .apply(category.getDescription());
         throwIfErrors();
     }
 }

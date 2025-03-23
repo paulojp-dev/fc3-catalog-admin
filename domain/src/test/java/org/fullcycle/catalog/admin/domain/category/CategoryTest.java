@@ -12,23 +12,6 @@ import java.util.List;
 
 public class CategoryTest {
 
-    static List<CategoryParams> invalidCategoryData() {
-        return List.of(
-                CategoryParams.byName(null, Message.NOT_NULL),
-                CategoryParams.byName("   ", Message.NOT_EMPTY),
-                CategoryParams.byName("ab   ", Message.MIN_STRING, 3),
-                CategoryParams.byName("a".repeat(256), Message.MAX_STRING, 255),
-                CategoryParams.byDescription("a".repeat(256), Message.MAX_STRING, 255)
-        );
-    }
-
-    static List<CategoryParams> validCategoryData() {
-        return List.of(
-                CategoryParams.of("a".repeat(255), "Description", true),
-                CategoryParams.of("a".repeat(3), null, false)
-        );
-    }
-
     @ParameterizedTest
     @MethodSource("validCategoryData")
     public void givenValidParams_whenCreateNewCategory_thenInstantiateACategory(CategoryParams params) {
@@ -104,6 +87,23 @@ public class CategoryTest {
         Assertions.assertTrue(category.getDeletedAt().isEmpty());
     }
 
+    static List<CategoryParams> invalidCategoryData() {
+        return List.of(
+            CategoryParams.byName(null, Message.NOT_NULL),
+            CategoryParams.byName("   ", Message.NOT_EMPTY),
+            CategoryParams.byName("ab   ", Message.MIN_STRING, 3),
+            CategoryParams.byName("a".repeat(256), Message.MAX_STRING, 255),
+            CategoryParams.byDescription("a".repeat(256), Message.MAX_STRING, 255)
+        );
+    }
+
+    static List<CategoryParams> validCategoryData() {
+        return List.of(
+            CategoryParams.of("a".repeat(255), "Description", true),
+            CategoryParams.of("a".repeat(3), null, false)
+        );
+    }
+
     public record CategoryParams(String name, String description, boolean isActive, String message) {
 
         public static CategoryParams of(final String name, final String description, final Boolean isActive) {
@@ -120,15 +120,10 @@ public class CategoryTest {
             return new CategoryParams(name, "Description", true, error);
         }
 
-        public static CategoryParams byDescription(final String description, final String message) {
-            String error = Message.resolve("description", message);
-            return new CategoryParams("Name", description, true, error);
-        }
-
         public static CategoryParams byDescription(
-                final String description,
-                final String message,
-                final Integer size
+            final String description,
+            final String message,
+            final Integer size
         ) {
             String error = Message.resolve("description", message, size);
             return new CategoryParams("Name", description, true, error);

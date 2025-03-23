@@ -4,8 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.base.ID;
+import org.fullcycle.catalog.admin.domain.category.Category;
 
 import java.time.Instant;
 
@@ -37,13 +37,15 @@ public class CategoryJpaEntity {
     public CategoryJpaEntity() {
     }
 
-    private CategoryJpaEntity(final String id,
-                              final String name,
-                              final String description,
-                              final Boolean active,
-                              final Instant createdAt,
-                              final Instant updatedAt,
-                              final Instant deletedAt) {
+    private CategoryJpaEntity(
+        final String id,
+        final String name,
+        final String description,
+        final Boolean active,
+        final Instant createdAt,
+        final Instant updatedAt,
+        final Instant deletedAt
+    ) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -61,7 +63,8 @@ public class CategoryJpaEntity {
             category.isActive(),
             category.getCreatedAt(),
             category.getUpdatedAt(),
-            category.getDeletedAt().orElse(null));
+            category.getDeletedAt().orElse(null)
+        );
     }
 
     public Category toDomain() {
@@ -72,7 +75,8 @@ public class CategoryJpaEntity {
             this.getActive(),
             this.getCreatedAt(),
             this.getUpdatedAt(),
-            this.getDeletedAt());
+            this.getDeletedAt()
+        );
     }
 
     public String getId() {

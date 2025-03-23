@@ -11,13 +11,15 @@ public class Category extends AggregateRoot<ID> {
     private String description;
     private boolean isActive;
 
-    private Category(final ID id,
-                     final String name,
-                     final String description,
-                     final boolean isActive,
-                     final Instant createdAt,
-                     final Instant updatedAt,
-                     final Instant deletedAt) {
+    private Category(
+        final ID id,
+        final String name,
+        final String description,
+        final boolean isActive,
+        final Instant createdAt,
+        final Instant updatedAt,
+        final Instant deletedAt
+    ) {
         super(id, createdAt, updatedAt, deletedAt);
         this.name = name;
         this.description = description;
@@ -25,24 +27,21 @@ public class Category extends AggregateRoot<ID> {
         validate();
     }
 
-    public static Category of(final ID id,
-                              final String name,
-                              final String description,
-                              final boolean isActive,
-                              final Instant createdAt,
-                              final Instant updatedAt,
-                              final Instant deletedAt) {
+    public static Category of(
+        final ID id,
+        final String name,
+        final String description,
+        final boolean isActive,
+        final Instant createdAt,
+        final Instant updatedAt,
+        final Instant deletedAt
+    ) {
         return new Category(id, name, description, isActive, createdAt, updatedAt, deletedAt);
     }
 
     public static Category of(final String name, final String description, final boolean isActive) {
         final var now = Instant.now();
         return Category.of(ID.unique(), name, description, isActive, now, now, null);
-    }
-
-    @Override
-    protected void validate() {
-        new CategoryValidation(this).validate();
     }
 
     public Category deactivate() {
@@ -84,5 +83,10 @@ public class Category extends AggregateRoot<ID> {
 
     public boolean isActive() {
         return isActive;
+    }
+
+    @Override
+    protected void validate() {
+        new CategoryValidation(this).validate();
     }
 }
