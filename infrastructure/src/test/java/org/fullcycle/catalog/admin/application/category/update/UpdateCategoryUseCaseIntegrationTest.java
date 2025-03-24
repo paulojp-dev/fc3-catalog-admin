@@ -2,8 +2,8 @@ package org.fullcycle.catalog.admin.application.category.update;
 
 import org.fullcycle.catalog.admin.IntegrationTest;
 import org.fullcycle.catalog.admin.application.exception.CategoryNotFoundException;
-import org.fullcycle.catalog.admin.domain.base.ID;
 import org.fullcycle.catalog.admin.domain.category.Category;
+import org.fullcycle.catalog.admin.domain.category.CategoryID;
 import org.fullcycle.catalog.admin.domain.exception.DomainValidationException;
 import org.fullcycle.catalog.admin.domain.validation.Message;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
@@ -48,7 +48,7 @@ public class UpdateCategoryUseCaseIntegrationTest {
 
     @Test
     public void givenACommandWithInvalidId_whenExecute_thenThrowException() {
-        final var invalidId = ID.of("invalid_id");
+        final var invalidId = CategoryID.of("invalid_id");
         final var command = UpdateCategoryCommand.of(
             invalidId.getValue(),
             "New Name",

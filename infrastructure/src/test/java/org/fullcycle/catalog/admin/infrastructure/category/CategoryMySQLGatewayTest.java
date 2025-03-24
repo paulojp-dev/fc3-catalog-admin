@@ -1,7 +1,7 @@
 package org.fullcycle.catalog.admin.infrastructure.category;
 
-import org.fullcycle.catalog.admin.domain.base.ID;
 import org.fullcycle.catalog.admin.domain.category.Category;
+import org.fullcycle.catalog.admin.domain.category.CategoryID;
 import org.fullcycle.catalog.admin.domain.pagination.SearchQuery;
 import org.fullcycle.catalog.admin.infrastructure.MySQLGatewayTest;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
@@ -90,7 +90,7 @@ public class CategoryMySQLGatewayTest {
 
     @Test
     public void givenNoCategory_whenCallsFindById_thenReturnNull() {
-        final var result = gateway.findById(ID.of("null"));
+        final var result = gateway.findById(CategoryID.of("null"));
         Assertions.assertTrue(result.isEmpty());
     }
 

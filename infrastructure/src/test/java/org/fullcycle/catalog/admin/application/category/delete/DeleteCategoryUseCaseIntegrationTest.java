@@ -1,9 +1,9 @@
 package org.fullcycle.catalog.admin.application.category.delete;
 
 import org.fullcycle.catalog.admin.IntegrationTest;
-import org.fullcycle.catalog.admin.domain.base.ID;
 import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
+import org.fullcycle.catalog.admin.domain.category.CategoryID;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaRepository;
 import org.junit.jupiter.api.Assertions;
@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Optional;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @IntegrationTest
@@ -39,7 +37,7 @@ public class DeleteCategoryUseCaseIntegrationTest {
 
     @Test
     public void givenAnIdOfNonExistingCategory_whenExecute_thenDoNothing() {
-        final var id = ID.of(java.util.UUID.randomUUID());
+        final var id = CategoryID.unique();
         Assertions.assertEquals(0, repository.count());
         useCase.execute(id.getValue());
         Assertions.assertEquals(0, repository.count());

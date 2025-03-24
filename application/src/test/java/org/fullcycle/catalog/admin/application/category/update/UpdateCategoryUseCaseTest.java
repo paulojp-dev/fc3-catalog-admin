@@ -1,9 +1,9 @@
 package org.fullcycle.catalog.admin.application.category.update;
 
 import org.fullcycle.catalog.admin.application.exception.CategoryNotFoundException;
-import org.fullcycle.catalog.admin.domain.base.ID;
 import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
+import org.fullcycle.catalog.admin.domain.category.CategoryID;
 import org.fullcycle.catalog.admin.domain.exception.DomainValidationException;
 import org.fullcycle.catalog.admin.domain.validation.Message;
 import org.junit.jupiter.api.Assertions;
@@ -71,7 +71,7 @@ public class UpdateCategoryUseCaseTest {
         final var expectedName = "New Name";
         final var expectedDescription = "New Description";
         final var expectedIsActive = false;
-        final var invalidId = ID.of("invalid_id");
+        final var invalidId = CategoryID.of("invalid_id");
         final var command = UpdateCategoryCommand.of(
             invalidId.getValue(),
             expectedName,

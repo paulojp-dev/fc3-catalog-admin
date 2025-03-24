@@ -2,25 +2,13 @@ package org.fullcycle.catalog.admin.domain.base;
 
 import java.util.Objects;
 
-public class ID extends Identifier {
+public abstract class ID extends Identifier {
 
     private final String $value;
 
-    private ID(final String value) {
+    protected ID(final String value) {
         Objects.requireNonNull(value, "Value cannot be null");
         this.$value = value;
-    }
-
-    public static ID of(final String id) {
-        return new ID(id);
-    }
-
-    public static ID of(final java.util.UUID id) {
-        return new ID(id.toString().toLowerCase());
-    }
-
-    public static ID unique() {
-        return ID.of(java.util.UUID.randomUUID());
     }
 
     public String getValue() {
@@ -39,5 +27,9 @@ public class ID extends Identifier {
     @Override
     public int hashCode() {
         return Objects.hashCode(getValue());
+    }
+
+    protected static String makeUUID() {
+        return java.util.UUID.randomUUID().toString();
     }
 }
