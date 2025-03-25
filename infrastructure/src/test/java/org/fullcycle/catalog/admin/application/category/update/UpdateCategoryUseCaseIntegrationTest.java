@@ -35,7 +35,7 @@ public class UpdateCategoryUseCaseIntegrationTest {
         repository.saveAndFlush(CategoryJpaEntity.from(existingCategory));
         Assertions.assertEquals(1, repository.count());
         final var output = useCase.execute(command);
-        final var actualCategory = repository.findById(output.id().getValue()).get();
+        final var actualCategory = repository.findById(output.id()).get();
         Assertions.assertEquals(command.id(), actualCategory.getId());
         Assertions.assertEquals(command.name(), actualCategory.getName());
         Assertions.assertEquals(command.description(), actualCategory.getDescription());

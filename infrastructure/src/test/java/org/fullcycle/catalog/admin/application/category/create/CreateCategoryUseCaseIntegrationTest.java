@@ -37,7 +37,7 @@ public class CreateCategoryUseCaseIntegrationTest {
         Assertions.assertEquals(0, repository.count());
         final var command = CreateCategoryCommand.of(expectedName, expectedDescription, expectedIsActive);
         final var result = useCase.execute(command);
-        final var actualCategory = repository.findById(result.id().getValue()).get();
+        final var actualCategory = repository.findById(result.id()).get();
         Assertions.assertEquals(1, repository.count());
         Assertions.assertEquals(expectedName, actualCategory.getName());
         Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
