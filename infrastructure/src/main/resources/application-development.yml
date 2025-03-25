@@ -10,3 +10,11 @@ mysql:
   password: catalog_admin
   schema: catalog_admin_db
   url: 0.0.0.0:3320
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html

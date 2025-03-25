@@ -30,6 +30,10 @@ repositories {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":application"))
+
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
+//    implementation 'org.springdoc:springdoc-openapi-ui:1.8.0'
+
     implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude module: 'spring-boot-starter-tomcat'
     }
