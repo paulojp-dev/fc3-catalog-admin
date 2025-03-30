@@ -1,4 +1,4 @@
-package org.fullcycle.catalog.admin.infrastructure.exception;
+package org.fullcycle.catalog.admin.infrastructure.exception.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
