@@ -51,7 +51,7 @@ public class ListCategoriesUseCaseTest {
         final var expectedPagination = new Pagination<>(
             expectedPage,
             expectedPerPage,
-            expectedCategories.stream().count(),
+            (long) expectedCategories.size(),
             expectedCategories
         );
         final var expectedOutput = expectedPagination.map(ListCategoriesOutput::from);
