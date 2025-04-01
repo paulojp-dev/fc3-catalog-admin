@@ -5,9 +5,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.fullcycle.catalog.admin.application.category.create.CreateCategoryOutput;
 import org.fullcycle.catalog.admin.application.category.retrieve.list.ListCategoriesOutput;
 import org.fullcycle.catalog.admin.domain.pagination.Pagination;
+import org.fullcycle.catalog.admin.infrastructure.api.output.CreateCategoryApiOutput;
 import org.fullcycle.catalog.admin.infrastructure.category.model.CreateCategoryApiInput;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,7 @@ public interface CategoryAPI {
         @ApiResponse(responseCode = "422", description = "Validation error for input data"),
         @ApiResponse(responseCode = "500", description = "Internal server error"),
     })
-    ResponseEntity<CreateCategoryOutput> createCategory(@RequestBody @Valid CreateCategoryApiInput input);
+    ResponseEntity<CreateCategoryApiOutput> createCategory(@RequestBody @Valid CreateCategoryApiInput input);
 
     @GetMapping
     @Operation(summary = "List all categories paginated")
