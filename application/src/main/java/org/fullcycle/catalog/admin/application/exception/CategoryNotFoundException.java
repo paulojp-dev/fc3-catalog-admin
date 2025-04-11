@@ -1,6 +1,6 @@
 package org.fullcycle.catalog.admin.application.exception;
 
-public class CategoryNotFoundException extends RuntimeException {
+public class CategoryNotFoundException extends NotFoundException {
 
     public CategoryNotFoundException(final String message) {
         super(message);
