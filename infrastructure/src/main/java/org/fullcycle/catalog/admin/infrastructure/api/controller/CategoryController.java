@@ -2,11 +2,14 @@ package org.fullcycle.catalog.admin.infrastructure.api.controller;
 
 import org.fullcycle.catalog.admin.application.category.create.CreateCategoryCommand;
 import org.fullcycle.catalog.admin.application.category.create.CreateCategoryUseCase;
+import org.fullcycle.catalog.admin.application.category.retrieve.get.GetCategoryByIdUseCase;
 import org.fullcycle.catalog.admin.application.category.retrieve.list.ListCategoriesOutput;
 import org.fullcycle.catalog.admin.application.category.retrieve.list.ListCategoriesUseCase;
+import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.pagination.Pagination;
 import org.fullcycle.catalog.admin.domain.pagination.SearchQuery;
 import org.fullcycle.catalog.admin.infrastructure.api.CategoryAPI;
+import org.fullcycle.catalog.admin.infrastructure.api.output.CategoryApiOutput;
 import org.fullcycle.catalog.admin.infrastructure.api.output.CreateCategoryApiOutput;
 import org.fullcycle.catalog.admin.infrastructure.category.model.CreateCategoryApiInput;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +24,16 @@ import java.net.URI;
 public class CategoryController implements CategoryAPI {
 
     private final CreateCategoryUseCase createCategoryUseCase;
+    private final GetCategoryByIdUseCase getCategoryByIdUseCase;
     private final ListCategoriesUseCase listCategoriesUseCase;
 
     public CategoryController(
         final CreateCategoryUseCase createCategoryUseCase,
+        final GetCategoryByIdUseCase getCategoryByIdUseCase,
         final ListCategoriesUseCase listCategoriesUseCase
     ) {
         this.createCategoryUseCase = createCategoryUseCase;
+        this.getCategoryByIdUseCase = getCategoryByIdUseCase;
         this.listCategoriesUseCase = listCategoriesUseCase;
     }
 
@@ -41,6 +47,12 @@ public class CategoryController implements CategoryAPI {
         final var output = createCategoryUseCase.execute(command);
         final var location = URI.create("/categories/" + output.id());
         return ResponseEntity.created(location).body(CreateCategoryApiOutput.from(output));
+    }
+
+    @Override
+    public ResponseEntity<CategoryApiOutput> getCategoryById(final String id) {
+        final var output = getCategoryByIdUseCase.execute(id);
+        return ResponseEntity.ok().body(CategoryApiOutput.from(output));
     }
 
     @GetMapping

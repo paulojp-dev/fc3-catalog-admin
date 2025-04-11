@@ -7,11 +7,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.fullcycle.catalog.admin.application.category.retrieve.list.ListCategoriesOutput;
 import org.fullcycle.catalog.admin.domain.pagination.Pagination;
+import org.fullcycle.catalog.admin.infrastructure.api.output.CategoryApiOutput;
 import org.fullcycle.catalog.admin.infrastructure.api.output.CreateCategoryApiOutput;
 import org.fullcycle.catalog.admin.infrastructure.category.model.CreateCategoryApiInput;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +34,18 @@ public interface CategoryAPI {
         @ApiResponse(responseCode = "500", description = "Internal server error"),
     })
     ResponseEntity<CreateCategoryApiOutput> createCategory(@RequestBody @Valid CreateCategoryApiInput input);
+
+    @GetMapping(
+        path = "{id}",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(summary = "Get a category it's identifier")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Category found"),
+        @ApiResponse(responseCode = "404", description = "Category not found"),
+        @ApiResponse(responseCode = "500", description = "Internal server error"),
+    })
+    ResponseEntity<CategoryApiOutput> getCategoryById(@PathVariable("id") String id);
 
     @GetMapping
     @Operation(summary = "List all categories paginated")

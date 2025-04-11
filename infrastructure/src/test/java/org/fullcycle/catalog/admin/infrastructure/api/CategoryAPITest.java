@@ -3,8 +3,11 @@ package org.fullcycle.catalog.admin.infrastructure.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fullcycle.catalog.admin.application.category.create.CreateCategoryOutput;
 import org.fullcycle.catalog.admin.application.category.create.CreateCategoryUseCase;
+import org.fullcycle.catalog.admin.application.category.retrieve.get.GetCategoryByIdOutput;
+import org.fullcycle.catalog.admin.application.category.retrieve.get.GetCategoryByIdUseCase;
 import org.fullcycle.catalog.admin.application.category.retrieve.list.ListCategoriesOutput;
 import org.fullcycle.catalog.admin.application.category.retrieve.list.ListCategoriesUseCase;
+import org.fullcycle.catalog.admin.application.exception.CategoryNotFoundException;
 import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryID;
 import org.fullcycle.catalog.admin.domain.pagination.Pagination;
@@ -14,6 +17,7 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,28 +43,34 @@ public class CategoryAPITest {
     private CreateCategoryUseCase createCategoryUseCase;
 
     @MockitoBean
+    private GetCategoryByIdUseCase getCategoryByIdUseCase;
+
+    @MockitoBean
     private ListCategoriesUseCase listCategoriesUseCase;
 
     @Test
     public void givenAValidInput_whenCallsCreateCategory_shouldReturnCategoryId() throws Exception {
         final var input = new CreateCategoryApiInput("Valid Name", "Valid Description", true);
+        final var expectedID = CategoryID.unique().getValue();
+
+        Mockito.when(createCategoryUseCase.execute(Mockito.any()))
+            .thenReturn(CreateCategoryOutput.from(expectedID));
+
         final var request = MockMvcRequestBuilders
             .post("/categories")
             .contentType(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(input));
-        final var expectedID = CategoryID.unique().getValue();
-        Mockito.when(createCategoryUseCase.execute(Mockito.any()))
-            .thenReturn(CreateCategoryOutput.from(expectedID));
-        mvc.perform(request)
-            .andDo(MockMvcResultHandlers.print())
-            .andExpectAll(
-                MockMvcResultMatchers.status().isCreated(),
-                MockMvcResultMatchers.header().string("Location", "/categories/" + expectedID),
-                MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE),
-                MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo(expectedID))
-            );
-        Mockito
-            .verify(createCategoryUseCase, Mockito.times(1))
+
+        final var response = mvc.perform(request).andDo(MockMvcResultHandlers.print());
+
+        response.andExpectAll(
+            MockMvcResultMatchers.status().isCreated(),
+            MockMvcResultMatchers.header().string("Location", "/categories/" + expectedID),
+            MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE),
+            MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo(expectedID))
+        );
+
+        Mockito.verify(createCategoryUseCase, Mockito.times(1))
             .execute(Mockito.argThat(
                 cmd -> Objects.equals(input.name(), cmd.name())
                     && Objects.equals(input.description(), cmd.description())
@@ -71,17 +81,69 @@ public class CategoryAPITest {
     @Test
     public void givenAInvalidInput_whenCallsCreateCategory_shouldReturnError() throws Exception {
         final var input = new CreateCategoryApiInput(null, null, null);
+
         final var request = MockMvcRequestBuilders
             .post("/categories")
             .contentType(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(input));
-        mvc.perform(request)
-            .andDo(MockMvcResultHandlers.print())
-            .andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.jsonPath("name", Matchers.equalTo("Name cannot be null")),
-                MockMvcResultMatchers.jsonPath("active", Matchers.equalTo("Active flag cannot be null"))
-            );
+
+        final var response = mvc.perform(request).andDo(MockMvcResultHandlers.print());
+
+        response.andExpectAll(
+            MockMvcResultMatchers.status().isBadRequest(),
+            MockMvcResultMatchers.jsonPath("name", Matchers.equalTo("Name cannot be null")),
+            MockMvcResultMatchers.jsonPath("active", Matchers.equalTo("Active flag cannot be null"))
+        );
+    }
+
+    @Test
+    public void givenAValidId_whenCallsGetCategoryById_thenReturnCategory() throws Exception {
+        final var expectedCategory = Category.of("Name", "Description", true);
+        final var expectedId = expectedCategory.getId().getValue();
+        final var expectedOutput = GetCategoryByIdOutput.from(expectedCategory);
+
+        Mockito.when(getCategoryByIdUseCase.execute(Mockito.any())).thenReturn(expectedOutput);
+
+        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId);
+        final var response = mvc.perform(request).andDo(MockMvcResultHandlers.print());
+
+        response.andExpectAll(
+            MockMvcResultMatchers.status().isOk(),
+            MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo(expectedCategory.getId().getValue())),
+            MockMvcResultMatchers.jsonPath("$.name", Matchers.equalTo(expectedCategory.getName())),
+            MockMvcResultMatchers.jsonPath("$.description", Matchers.equalTo(expectedCategory.getDescription())),
+            MockMvcResultMatchers.jsonPath("$.is_active", Matchers.equalTo(expectedCategory.isActive())),
+            MockMvcResultMatchers.jsonPath("$.created_at", Matchers.equalTo(expectedCategory.getCreatedAt().toString())),
+            MockMvcResultMatchers.jsonPath("$.updated_at", Matchers.equalTo(expectedCategory.getUpdatedAt().toString())),
+            MockMvcResultMatchers.jsonPath("$.deleted_at", Matchers.nullValue())
+        );
+
+        Mockito.verify(getCategoryByIdUseCase, Mockito.times(1)).execute(Mockito.eq(expectedId));
+    }
+
+    @Test
+    public void givenAInvalidId_whenCallsGetCategoryById_thenReturnNotFound() throws Exception {
+        final var expectedId = CategoryID.unique().getValue();
+        final var expectedException = CategoryNotFoundException.byId(expectedId);
+
+        Mockito.when(getCategoryByIdUseCase.execute(Mockito.any()))
+            .thenThrow(expectedException);
+
+        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId);
+        final var response = mvc.perform(request).andDo(MockMvcResultHandlers.print());
+
+        response.andExpectAll(
+            MockMvcResultMatchers.status().isNotFound(),
+            MockMvcResultMatchers.jsonPath("$.status", Matchers.equalTo(HttpStatus.NOT_FOUND.value())),
+            MockMvcResultMatchers.jsonPath("$.error", Matchers.equalTo(HttpStatus.NOT_FOUND.getReasonPhrase())),
+            MockMvcResultMatchers.jsonPath("$.message", Matchers.equalTo(expectedException.getMessage())),
+            MockMvcResultMatchers.jsonPath(
+                "$.path",
+                Matchers.equalTo(response.andReturn().getRequest().getRequestURI())
+            )
+        );
+
+        Mockito.verify(getCategoryByIdUseCase, Mockito.times(1)).execute(Mockito.eq(expectedId));
     }
 
     @Test
@@ -91,33 +153,40 @@ public class CategoryAPITest {
         final var expectedQuantityPerPage = 10;
         final var expectedSortField = "name";
         final var expectedSortDirection = "asc";
+
         final var expectedCategories = Stream.of(
             Category.of("Category 1", "Description 1", true),
             Category.of("Category 2", "Description 2", false),
             Category.of("Category 3", "Description 3", true)
         ).map(ListCategoriesOutput::from).toList();
-        final Pagination<ListCategoriesOutput> pagination = new Pagination<ListCategoriesOutput>(
+
+        final Pagination<ListCategoriesOutput> pagination = new Pagination<>(
             expectedPage,
             expectedQuantityPerPage,
             (long) expectedCategories.size(),
             expectedCategories
         );
+
         Mockito.when(listCategoriesUseCase.execute(Mockito.any()))
             .thenReturn(pagination);
+
         final var request = MockMvcRequestBuilders
             .get("/categories")
             .contentType(MediaType.APPLICATION_JSON);
-        final var result = mvc.perform(request)
-            .andDo(MockMvcResultHandlers.print())
-            .andExpectAll(
-                MockMvcResultMatchers.status().isOk(),
-                MockMvcResultMatchers.jsonPath("$.currentPage", Matchers.is(expectedPage)),
-                MockMvcResultMatchers.jsonPath("$.perPage", Matchers.is(expectedQuantityPerPage)),
-                MockMvcResultMatchers.jsonPath("$.total", Matchers.is(expectedCategories.size()))
-            );
-        assertCategoryResult(result, expectedCategories.get(0), 0);
-        assertCategoryResult(result, expectedCategories.get(1), 1);
-        assertCategoryResult(result, expectedCategories.get(2), 2);
+
+        final var response = mvc.perform(request).andDo(MockMvcResultHandlers.print());
+
+        response.andExpectAll(
+            MockMvcResultMatchers.status().isOk(),
+            MockMvcResultMatchers.jsonPath("$.currentPage", Matchers.is(expectedPage)),
+            MockMvcResultMatchers.jsonPath("$.perPage", Matchers.is(expectedQuantityPerPage)),
+            MockMvcResultMatchers.jsonPath("$.total", Matchers.is(expectedCategories.size()))
+        );
+
+        assertCategoryResult(response, expectedCategories.get(0), 0);
+        assertCategoryResult(response, expectedCategories.get(1), 1);
+        assertCategoryResult(response, expectedCategories.get(2), 2);
+
         Mockito.verify(listCategoriesUseCase, Mockito.times(1))
             .execute(Mockito.argThat(
                 searchQuery -> Objects.equals(searchQuery.page(), expectedPage)
@@ -135,15 +204,19 @@ public class CategoryAPITest {
         final var expectedQuantityPerPage = 5;
         final var expectedSortField = "createdAt";
         final var expectedSortDirection = "desc";
+
         final List<ListCategoriesOutput> expectedCategories = List.of();
+
         final Pagination<ListCategoriesOutput> pagination = new Pagination<>(
             expectedPage,
             expectedQuantityPerPage,
             (long) 0,
             expectedCategories
         );
+
         Mockito.when(listCategoriesUseCase.execute(Mockito.any()))
             .thenReturn(pagination);
+
         final var request = MockMvcRequestBuilders
             .get("/categories")
             .param("search", expectedSearch)
@@ -152,14 +225,16 @@ public class CategoryAPITest {
             .param("sortField", expectedSortField)
             .param("sortDirection", expectedSortDirection)
             .contentType(MediaType.APPLICATION_JSON);
-        final var result = mvc.perform(request)
-            .andDo(MockMvcResultHandlers.print())
-            .andExpectAll(
-                MockMvcResultMatchers.status().isOk(),
-                MockMvcResultMatchers.jsonPath("$.currentPage", Matchers.is(expectedPage)),
-                MockMvcResultMatchers.jsonPath("$.perPage", Matchers.is(expectedQuantityPerPage)),
-                MockMvcResultMatchers.jsonPath("$.total", Matchers.is(0))
-            );
+
+        final var response = mvc.perform(request).andDo(MockMvcResultHandlers.print());
+
+        response.andExpectAll(
+            MockMvcResultMatchers.status().isOk(),
+            MockMvcResultMatchers.jsonPath("$.currentPage", Matchers.is(expectedPage)),
+            MockMvcResultMatchers.jsonPath("$.perPage", Matchers.is(expectedQuantityPerPage)),
+            MockMvcResultMatchers.jsonPath("$.total", Matchers.is(0))
+        );
+
         Mockito.verify(listCategoriesUseCase, Mockito.times(1))
             .execute(Mockito.argThat(
                 searchQuery -> Objects.equals(searchQuery.page(), expectedPage)
