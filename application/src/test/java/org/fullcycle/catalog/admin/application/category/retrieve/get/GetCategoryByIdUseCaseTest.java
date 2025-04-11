@@ -31,20 +31,23 @@ public class GetCategoryByIdUseCaseTest {
 
     @Test
     public void givenAnIdOfExistingCategory_whenExecute_theReturnACategory() {
-        final var expectedName = "Category Name";
-        final var expectedDescription = "Category Description";
-        final var expectedIsActive = true;
-        final var existingCategory = Category.of(expectedName, expectedDescription, expectedIsActive);
-        final var expectedId = existingCategory.getId();
-        Mockito.when(categoryGateway.findById(Mockito.eq(expectedId)))
-            .thenReturn(Optional.of(existingCategory));
-        final var output = useCase.execute(expectedId.getValue());
-        Assertions.assertEquals(expectedId.getValue(), output.id());
-        Assertions.assertEquals(expectedName, output.name());
-        Assertions.assertEquals(expectedDescription, output.description());
-        Assertions.assertEquals(expectedIsActive, output.isActive());
+        final var expectedCategory = Category.of("Category Name", "Category Description", false);
+
+        Mockito.when(categoryGateway.findById(Mockito.any()))
+            .thenReturn(Optional.of(expectedCategory));
+
+        final var output = useCase.execute(expectedCategory.getId().getValue());
+
+        Assertions.assertEquals(expectedCategory.getId().getValue(), output.id());
+        Assertions.assertEquals(expectedCategory.getName(), output.name());
+        Assertions.assertEquals(expectedCategory.getDescription(), output.description());
+        Assertions.assertEquals(expectedCategory.isActive(), output.isActive());
+        Assertions.assertEquals(expectedCategory.getCreatedAt(), output.createdAt());
+        Assertions.assertEquals(expectedCategory.getUpdatedAt(), output.updatedAt());
+        Assertions.assertEquals(expectedCategory.getDeletedAt().orElse(null), output.deletedAt());
+
         Mockito.verify(categoryGateway, Mockito.times(1))
-            .findById(Mockito.eq(expectedId));
+            .findById(Mockito.eq(expectedCategory.getId()));
     }
 
     @Test
@@ -52,9 +55,12 @@ public class GetCategoryByIdUseCaseTest {
         final var existingCategory = Category.of("Name", "Description", Boolean.TRUE);
         final var expectedId = existingCategory.getId();
         final var expectedException = CategoryNotFoundException.byId(expectedId.getValue());
+
         Mockito.when(categoryGateway.findById(Mockito.eq(expectedId)))
             .thenReturn(Optional.empty());
+
         Executable executable = () -> useCase.execute(expectedId.getValue());
+
         final var exception = Assertions.assertThrows(expectedException.getClass(), executable);
         Assertions.assertEquals(expectedException.getMessage(), exception.getMessage());
     }
