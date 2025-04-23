@@ -1,4 +1,4 @@
-package org.fullcycle.catalog.admin.infrastructure.api.output;
+package org.fullcycle.catalog.admin.infrastructure.category.model;
 
 import org.fullcycle.catalog.admin.application.category.create.CreateCategoryOutput;
 

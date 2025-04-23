@@ -7,8 +7,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.fullcycle.catalog.admin.application.category.retrieve.list.ListCategoriesOutput;
 import org.fullcycle.catalog.admin.domain.pagination.Pagination;
-import org.fullcycle.catalog.admin.infrastructure.api.output.CategoryApiOutput;
-import org.fullcycle.catalog.admin.infrastructure.api.output.CreateCategoryApiOutput;
+import org.fullcycle.catalog.admin.infrastructure.category.model.GetCategoryApiOutput;
+import org.fullcycle.catalog.admin.infrastructure.category.model.CreateCategoryApiOutput;
 import org.fullcycle.catalog.admin.infrastructure.category.model.CreateCategoryApiInput;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +45,7 @@ public interface CategoryAPI {
         @ApiResponse(responseCode = "404", description = "Category not found"),
         @ApiResponse(responseCode = "500", description = "Internal server error"),
     })
-    ResponseEntity<CategoryApiOutput> getCategoryById(@PathVariable("id") String id);
+    ResponseEntity<GetCategoryApiOutput> getCategoryById(@PathVariable("id") String id);
 
     @GetMapping
     @Operation(summary = "List all categories paginated")

@@ -1,11 +1,11 @@
-package org.fullcycle.catalog.admin.infrastructure.api.output;
+package org.fullcycle.catalog.admin.infrastructure.category.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.fullcycle.catalog.admin.application.category.retrieve.get.GetCategoryByIdOutput;
 
 import java.time.Instant;
 
-public record CategoryApiOutput(
+public record GetCategoryApiOutput(
     @JsonProperty("id") String id,
     @JsonProperty("name") String name,
     @JsonProperty("description") String description,
@@ -15,8 +15,8 @@ public record CategoryApiOutput(
     @JsonProperty("deleted_at") Instant deletedAt
 ) {
 
-    public static CategoryApiOutput from(GetCategoryByIdOutput category) {
-        return new CategoryApiOutput(
+    public static GetCategoryApiOutput from(GetCategoryByIdOutput category) {
+        return new GetCategoryApiOutput(
             category.id(),
             category.name(),
             category.description(),

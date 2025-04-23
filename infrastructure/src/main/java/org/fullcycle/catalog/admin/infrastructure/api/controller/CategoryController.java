@@ -5,12 +5,11 @@ import org.fullcycle.catalog.admin.application.category.create.CreateCategoryUse
 import org.fullcycle.catalog.admin.application.category.retrieve.get.GetCategoryByIdUseCase;
 import org.fullcycle.catalog.admin.application.category.retrieve.list.ListCategoriesOutput;
 import org.fullcycle.catalog.admin.application.category.retrieve.list.ListCategoriesUseCase;
-import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.pagination.Pagination;
 import org.fullcycle.catalog.admin.domain.pagination.SearchQuery;
 import org.fullcycle.catalog.admin.infrastructure.api.CategoryAPI;
-import org.fullcycle.catalog.admin.infrastructure.api.output.CategoryApiOutput;
-import org.fullcycle.catalog.admin.infrastructure.api.output.CreateCategoryApiOutput;
+import org.fullcycle.catalog.admin.infrastructure.category.model.GetCategoryApiOutput;
+import org.fullcycle.catalog.admin.infrastructure.category.model.CreateCategoryApiOutput;
 import org.fullcycle.catalog.admin.infrastructure.category.model.CreateCategoryApiInput;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,9 +49,9 @@ public class CategoryController implements CategoryAPI {
     }
 
     @Override
-    public ResponseEntity<CategoryApiOutput> getCategoryById(final String id) {
+    public ResponseEntity<GetCategoryApiOutput> getCategoryById(final String id) {
         final var output = getCategoryByIdUseCase.execute(id);
-        return ResponseEntity.ok().body(CategoryApiOutput.from(output));
+        return ResponseEntity.ok().body(GetCategoryApiOutput.from(output));
     }
 
     @GetMapping
