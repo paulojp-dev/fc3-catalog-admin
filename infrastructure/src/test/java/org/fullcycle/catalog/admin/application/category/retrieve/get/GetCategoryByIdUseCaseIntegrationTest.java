@@ -1,8 +1,8 @@
 package org.fullcycle.catalog.admin.application.category.retrieve.get;
 
 import org.fullcycle.catalog.admin.IntegrationTest;
-import org.fullcycle.catalog.admin.application.exception.CategoryNotFoundException;
 import org.fullcycle.catalog.admin.domain.category.Category;
+import org.fullcycle.catalog.admin.domain.exception.NotFoundException;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaRepository;
 import org.junit.jupiter.api.Assertions;
@@ -41,7 +41,7 @@ public class GetCategoryByIdUseCaseIntegrationTest {
     public void givenAnIdOfNonExistingCategory_whenExecute_theThrowsException() {
         final var expectedCategory = Category.of("Name", "Description", Boolean.TRUE);
         final var expectedId = expectedCategory.getId();
-        final var expectedException = CategoryNotFoundException.byId(expectedId.getValue());
+        final var expectedException = NotFoundException.with(Category.class, expectedId);
 
         Executable executable = () -> useCase.execute(expectedId.getValue());
 

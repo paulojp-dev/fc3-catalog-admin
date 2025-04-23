@@ -1,10 +1,10 @@
 package org.fullcycle.catalog.admin.application.category.update;
 
 import org.fullcycle.catalog.admin.IntegrationTest;
-import org.fullcycle.catalog.admin.application.exception.CategoryNotFoundException;
 import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryID;
 import org.fullcycle.catalog.admin.domain.exception.DomainValidationException;
+import org.fullcycle.catalog.admin.domain.exception.NotFoundException;
 import org.fullcycle.catalog.admin.domain.validation.Message;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaRepository;
@@ -55,7 +55,7 @@ public class UpdateCategoryUseCaseIntegrationTest {
             "New Description",
             false
         );
-        final var expectedException = CategoryNotFoundException.byId(invalidId.getValue());
+        final var expectedException = NotFoundException.with(Category.class, invalidId);
         Assertions.assertEquals(0, repository.count());
         Executable executable = () -> useCase.execute(command);
         final var actualException = Assertions.assertThrows(expectedException.getClass(), executable);

@@ -4,7 +4,7 @@ import org.fullcycle.catalog.admin.domain.validation.Error;
 
 import java.util.List;
 
-public class DomainValidationException extends NoStackTraceException {
+public class DomainValidationException extends DomainException {
 
     private final List<Error> errors;
 

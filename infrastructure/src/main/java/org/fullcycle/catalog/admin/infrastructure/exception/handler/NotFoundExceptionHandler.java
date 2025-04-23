@@ -1,7 +1,7 @@
 package org.fullcycle.catalog.admin.infrastructure.exception.handler;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.fullcycle.catalog.admin.application.exception.NotFoundException;
+import org.fullcycle.catalog.admin.domain.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

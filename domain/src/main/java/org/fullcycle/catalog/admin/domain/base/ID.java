@@ -11,6 +11,7 @@ public abstract class ID extends Identifier {
         this.$value = value;
     }
 
+    @Override
     public String getValue() {
         return $value;
     }

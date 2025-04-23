@@ -1,8 +1,8 @@
 package org.fullcycle.catalog.admin.infrastructure.category;
 
-import org.fullcycle.catalog.admin.domain.base.ID;
 import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
+import org.fullcycle.catalog.admin.domain.category.CategoryID;
 import org.fullcycle.catalog.admin.domain.pagination.Pagination;
 import org.fullcycle.catalog.admin.domain.pagination.SearchQuery;
 import org.fullcycle.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
@@ -31,7 +31,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public Optional<Category> findById(final ID id) {
+    public Optional<Category> findById(final CategoryID id) {
         final var result = repository.findById(id.getValue());
         return result.map(CategoryJpaEntity::toDomain);
     }
@@ -69,7 +69,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public void deleteById(final ID id) {
+    public void deleteById(final CategoryID id) {
         repository.deleteById(id.getValue());
     }
 

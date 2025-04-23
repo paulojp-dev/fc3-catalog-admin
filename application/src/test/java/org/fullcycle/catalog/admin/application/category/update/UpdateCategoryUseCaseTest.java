@@ -1,10 +1,10 @@
 package org.fullcycle.catalog.admin.application.category.update;
 
-import org.fullcycle.catalog.admin.application.exception.CategoryNotFoundException;
 import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
 import org.fullcycle.catalog.admin.domain.category.CategoryID;
 import org.fullcycle.catalog.admin.domain.exception.DomainValidationException;
+import org.fullcycle.catalog.admin.domain.exception.NotFoundException;
 import org.fullcycle.catalog.admin.domain.validation.Message;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -78,7 +78,7 @@ public class UpdateCategoryUseCaseTest {
             expectedDescription,
             expectedIsActive
         );
-        final var expectedException = CategoryNotFoundException.byId(invalidId.getValue());
+        final var expectedException = NotFoundException.with(Category.class, invalidId);
         Mockito.when(categoryGateway.findById(Mockito.eq(invalidId)))
             .thenReturn(Optional.empty());
         Executable executable = () -> useCase.execute(command);

@@ -1,9 +1,10 @@
 package org.fullcycle.catalog.admin.application.category.update;
 
 import org.fullcycle.catalog.admin.application.base.UseCase;
-import org.fullcycle.catalog.admin.application.exception.CategoryNotFoundException;
+import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryGateway;
 import org.fullcycle.catalog.admin.domain.category.CategoryID;
+import org.fullcycle.catalog.admin.domain.exception.NotFoundException;
 
 import java.util.function.Supplier;
 
@@ -17,8 +18,9 @@ public class UpdateCategoryUseCase extends UseCase<UpdateCategoryCommand, Update
 
     @Override
     public UpdateCategoryOutput execute(final UpdateCategoryCommand command) {
-        final var existingCategory = categoryGateway.findById(CategoryID.of(command.id()))
-            .orElseThrow(notFoundException(command.id()));
+        final var categoryId = CategoryID.of(command.id());
+        final var existingCategory = categoryGateway.findById(categoryId)
+            .orElseThrow(notFoundException(categoryId));
         final var updatedCategory = existingCategory.update(
             command.name(),
             command.description(),
@@ -28,7 +30,7 @@ public class UpdateCategoryUseCase extends UseCase<UpdateCategoryCommand, Update
         return UpdateCategoryOutput.from(persistedCategory);
     }
 
-    private static Supplier<CategoryNotFoundException> notFoundException(final String id) {
-        return () -> CategoryNotFoundException.byId(id);
+    private static Supplier<NotFoundException> notFoundException(final CategoryID id) {
+        return () -> NotFoundException.with(Category.class, id);
     }
 }

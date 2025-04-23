@@ -7,9 +7,9 @@ import org.fullcycle.catalog.admin.application.category.retrieve.get.GetCategory
 import org.fullcycle.catalog.admin.application.category.retrieve.get.GetCategoryByIdUseCase;
 import org.fullcycle.catalog.admin.application.category.retrieve.list.ListCategoriesOutput;
 import org.fullcycle.catalog.admin.application.category.retrieve.list.ListCategoriesUseCase;
-import org.fullcycle.catalog.admin.application.exception.CategoryNotFoundException;
 import org.fullcycle.catalog.admin.domain.category.Category;
 import org.fullcycle.catalog.admin.domain.category.CategoryID;
+import org.fullcycle.catalog.admin.domain.exception.NotFoundException;
 import org.fullcycle.catalog.admin.domain.pagination.Pagination;
 import org.fullcycle.catalog.admin.infrastructure.ControllerTest;
 import org.fullcycle.catalog.admin.infrastructure.category.model.CreateCategoryApiInput;
@@ -123,13 +123,13 @@ public class CategoryAPITest {
 
     @Test
     public void givenAInvalidId_whenCallsGetCategoryById_thenReturnNotFound() throws Exception {
-        final var expectedId = CategoryID.unique().getValue();
-        final var expectedException = CategoryNotFoundException.byId(expectedId);
+        final var expectedId = CategoryID.unique();
+        final var expectedException = NotFoundException.with(Category.class, expectedId);
 
         Mockito.when(getCategoryByIdUseCase.execute(Mockito.any()))
             .thenThrow(expectedException);
 
-        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId);
+        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId.getValue());
         final var response = mvc.perform(request).andDo(MockMvcResultHandlers.print());
 
         response.andExpectAll(
@@ -143,7 +143,7 @@ public class CategoryAPITest {
             )
         );
 
-        Mockito.verify(getCategoryByIdUseCase, Mockito.times(1)).execute(Mockito.eq(expectedId));
+        Mockito.verify(getCategoryByIdUseCase, Mockito.times(1)).execute(Mockito.eq(expectedId.getValue()));
     }
 
     @Test
